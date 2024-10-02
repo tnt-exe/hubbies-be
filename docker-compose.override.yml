@@ -1,0 +1,26 @@
+services:
+  hubbies.web:
+    environment:
+      - ASPNETCORE_HTTP_PORTS: 8080
+      - ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+      - SERVER_URL: ${SERVER_URL}
+      - FirebaseSettings__ProjectId: ${FirebaseSettings__ProjectId}
+      - FirebaseSettings__ServiceKey: ${FirebaseSettings__ServiceKey}
+      - JwtSettings__SecretKey: ${JwtSettings__SecretKey}
+      - JwtSettings__Issuer: ${JwtSettings__Issuer}
+      - JwtSettings__Audience: ${JwtSettings__Audience}
+      - JwtSettings__Expires: ${JwtSettings__Expires}
+      - JwtSettings__RefreshExpires: ${JwtSettings__RefreshExpires}
+
+      - ConnectionStrings__HUBBIES_DB: ${ConnectionStrings__HUBBIES_DB}
+      - ConnectionStrings__HANGFIRE_DB: ${ConnectionStrings__HANGFIRE_DB}
+
+      - RateLimitSettings__Bucket__TokenLimit: ${RateLimitSettings__Bucket__TokenLimit}
+      - RateLimitSettings__Bucket__TokensPerPeriod: ${RateLimitSettings__Bucket__TokensPerPeriod}
+      - RateLimitSettings__Bucket__ReplenishmentPeriod: ${RateLimitSettings__Bucket__ReplenishmentPeriod}
+
+    ports:
+      - "80:8080"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro

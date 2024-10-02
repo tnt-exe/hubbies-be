@@ -1,0 +1,6 @@
+services:
+  hubbies.webservice:
+    image: ${DOCKER_REGISTRY-}hubbiesweb
+    build:
+      context: .
+      dockerfile: Dockerfile

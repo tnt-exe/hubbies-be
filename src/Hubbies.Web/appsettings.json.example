@@ -1,0 +1,36 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "FirebaseSettings": {
+    "ProjectId": "ProjectId",
+    "ServiceKey": "ServiceKey"
+  },
+  "JwtSettings": {
+    "SecretKey": "SecretKey",
+    "Issuer": "Issuer",
+    "Audience": "Audience",
+    "Expires": 60,
+    "RefreshExpires": 43200
+  },
+  "ConnectionStrings": {
+    "HUBBIES_DB": "HUBBIES_DB_CONNECTION_STRING"
+  },
+  "RateLimitSettings": {
+    "Bucket": {
+      "TokenLimit": 200,
+      "TokensPerPeriod": 20,
+      "ReplenishmentPeriod": 60
+    }
+  },
+  "SwaggerServers": [
+    {
+      "Url": "Server Url",
+      "Description": "Server Description"
+    }
+  ]
+}
