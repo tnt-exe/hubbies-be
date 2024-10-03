@@ -18,12 +18,12 @@ public class EventCategoriesController(IEventCategoryService eventCategoryServic
         return Ok(response);
     }
 
-    [HttpGet("{id}", Name = "GetEventCategory")]
+    [HttpGet("{eventCategoryId}", Name = "GetEventCategory")]
     [ProducesResponseType(typeof(EventCategoryDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetEventCategoryAsync(Guid id)
+    public async Task<IActionResult> GetEventCategoryAsync(Guid eventCategoryId)
     {
-        var response = await eventCategoryService.GetEventCategoryAsync(id);
+        var response = await eventCategoryService.GetEventCategoryAsync(eventCategoryId);
 
         return Ok(response);
     }
@@ -35,26 +35,26 @@ public class EventCategoriesController(IEventCategoryService eventCategoryServic
     {
         var response = await eventCategoryService.CreateEventCategoryAsync(request);
 
-        return CreatedAtRoute("GetEventCategory", new { id = response.Id }, response);
+        return CreatedAtRoute("GetEventCategory", new { eventCategoryId = response.Id }, response);
     }
 
-    [HttpPut("{id}", Name = "UpdateEventCategory")]
+    [HttpPut("{eventCategoryId}", Name = "UpdateEventCategory")]
     [ProducesResponseType(typeof(EventCategoryDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
-    public async Task<IActionResult> UpdateEventCategoryAsync(Guid id, UpdateEventCategoryRequest request)
+    public async Task<IActionResult> UpdateEventCategoryAsync(Guid eventCategoryId, UpdateEventCategoryRequest request)
     {
-        var response = await eventCategoryService.UpdateEventCategoryAsync(id, request);
+        var response = await eventCategoryService.UpdateEventCategoryAsync(eventCategoryId, request);
 
         return Ok(response);
     }
 
-    [HttpDelete("{id}", Name = "DeleteEventCategory")]
+    [HttpDelete("{eventCategoryId}", Name = "DeleteEventCategory")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteEventCategoryAsync(Guid id)
+    public async Task<IActionResult> DeleteEventCategoryAsync(Guid eventCategoryId)
     {
-        await eventCategoryService.DeleteEventCategoryAsync(id);
+        await eventCategoryService.DeleteEventCategoryAsync(eventCategoryId);
 
         return NoContent();
     }

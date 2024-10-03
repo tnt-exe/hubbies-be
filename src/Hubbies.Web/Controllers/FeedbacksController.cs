@@ -1,5 +1,4 @@
 using Hubbies.Application.Features.Feedbacks;
-using Hubbies.Domain.Enums;
 
 namespace Hubbies.Web.Controllers;
 

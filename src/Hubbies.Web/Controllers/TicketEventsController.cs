@@ -1,5 +1,4 @@
 using Hubbies.Application.Features.TicketEvents;
-using Hubbies.Domain.Enums;
 
 namespace Hubbies.Web.Controllers;
 
@@ -21,14 +20,14 @@ public class TicketEventsController(ITicketEventService ticketEventService)
         return Ok(response);
     }
 
-    [HttpGet("{id}", Name = "GetTicketEvent")]
+    [HttpGet("{ticketEventId}", Name = "GetTicketEvent")]
     [ProducesResponseType(typeof(TicketEventDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetTicketEventAsync(
-        Guid id,
+        Guid ticketEventId,
         [FromQuery] TicketEventIncludeParameter includeParameter)
     {
-        var response = await ticketEventService.GetTicketEventAsync(id, includeParameter);
+        var response = await ticketEventService.GetTicketEventAsync(ticketEventId, includeParameter);
 
         return Ok(response);
     }
@@ -40,26 +39,26 @@ public class TicketEventsController(ITicketEventService ticketEventService)
     {
         var response = await ticketEventService.CreateTicketEventAsync(request);
 
-        return CreatedAtRoute("GetTicketEvent", new { id = response.Id }, response);
+        return CreatedAtRoute("GetTicketEvent", new { ticketEventId = response.Id }, response);
     }
 
-    [HttpPut("{id}", Name = "UpdateTicketEvent")]
+    [HttpPut("{ticketEventId}", Name = "UpdateTicketEvent")]
     [ProducesResponseType(typeof(TicketEventDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
-    public async Task<IActionResult> UpdateTicketEventAsync(Guid id, UpdateTicketEventRequest request)
+    public async Task<IActionResult> UpdateTicketEventAsync(Guid ticketEventId, UpdateTicketEventRequest request)
     {
-        var response = await ticketEventService.UpdateTicketEventAsync(id, request);
+        var response = await ticketEventService.UpdateTicketEventAsync(ticketEventId, request);
 
         return Ok(response);
     }
 
-    [HttpDelete("{id}", Name = "DeleteTicketEvent")]
+    [HttpDelete("{ticketEventId}", Name = "DeleteTicketEvent")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteTicketEventAsync(Guid id)
+    public async Task<IActionResult> DeleteTicketEventAsync(Guid ticketEventId)
     {
-        await ticketEventService.DeleteTicketEventAsync(id);
+        await ticketEventService.DeleteTicketEventAsync(ticketEventId);
 
         return NoContent();
     }

@@ -1,5 +1,4 @@
 using Hubbies.Application.Features.Orders;
-using Hubbies.Domain.Enums;
 
 namespace Hubbies.Web.Controllers;
 
@@ -21,12 +20,12 @@ public class OrdersController(IOrderService orderService)
         return Ok(response);
     }
 
-    [HttpGet("{id}", Name = "GetOrder")]
+    [HttpGet("{orderId}", Name = "GetOrder")]
     [ProducesResponseType(typeof(OrderDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetOrderAsync(Guid id, [FromQuery] OrderIncludeParameter includeParameter)
+    public async Task<IActionResult> GetOrderAsync(Guid orderId, [FromQuery] OrderIncludeParameter includeParameter)
     {
-        var response = await orderService.GetOrderAsync(id, includeParameter);
+        var response = await orderService.GetOrderAsync(orderId, includeParameter);
 
         return Ok(response);
     }
@@ -38,7 +37,7 @@ public class OrdersController(IOrderService orderService)
     {
         var response = await orderService.CreateOrderAsync(request);
 
-        return CreatedAtRoute("GetOrder", new { id = response.Id }, response);
+        return CreatedAtRoute("GetOrder", new { orderId = response.Id }, response);
     }
 
     [HttpPut("status", Name = "UpdateOrderStatus")]
