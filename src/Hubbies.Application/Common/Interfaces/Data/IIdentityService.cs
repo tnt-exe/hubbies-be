@@ -1,6 +1,4 @@
-﻿using Hubbies.Application.Features.Accounts;
-
-namespace Hubbies.Application.Common.Interfaces.Data;
+﻿namespace Hubbies.Application.Common.Interfaces.Data;
 
 public interface IIdentityService
 {
@@ -69,10 +67,9 @@ public interface IIdentityService
     /// A tuple containing:
     /// <para>Item1 (ApplicationUser): The user with the given email</para>
     /// <para>Item2 (string): The role of the user</para>
-    /// <para>Item3 (bool): True if the user is a newly created user, false otherwise</para>
     /// </returns>
     /// <exception cref="UnauthorizedAccessException">Thrown when the user is locked out</exception>
-    Task<(ApplicationUser user, string role, bool newUser)> GetUserByEmailAsync(string email);
+    Task<(ApplicationUser user, string role)> GetUserByEmailAsync(string email);
 
     /// <summary>
     /// Change the password of the user
@@ -111,9 +108,8 @@ public interface IIdentityService
     /// Lock the account of the user with the given ID and lockout end time
     /// </summary>
     /// <param name="userId">The ID of the user</param>
-    /// <param name="lockoutEnd">The end time of the lockout</param>
     /// <exception cref="BadRequestException">Thrown if the account is already locked</exception>
-    Task LockAccountAsync(Guid userId, DateTimeOffset lockoutEnd);
+    Task LockAccountAsync(Guid userId);
 
     /// <summary>
     /// Unlock the account of the user with the given ID

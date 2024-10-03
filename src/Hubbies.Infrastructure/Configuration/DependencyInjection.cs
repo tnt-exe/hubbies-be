@@ -14,7 +14,7 @@ public static class DependencyInjection
 
         services.AddDbContext<ApplicationDbContext>((service, options) =>
         {
-            // options.AddInterceptors(service.GetServices<ISaveChangesInterceptor>());
+            options.AddInterceptors(service.GetServices<ISaveChangesInterceptor>());
             options.UseNpgsql(configuration.GetConnectionString("HUBBIES_DB")!);
         });
 

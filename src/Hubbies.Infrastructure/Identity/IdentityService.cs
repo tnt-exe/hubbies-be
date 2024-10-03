@@ -1,6 +1,4 @@
-﻿using Hubbies.Application.Features.Accounts;
-
-namespace Hubbies.Infrastructure.Identity;
+﻿namespace Hubbies.Infrastructure.Identity;
 
 public class IdentityService : IIdentityService
 {
@@ -90,11 +88,9 @@ public class IdentityService : IIdentityService
         return await _userManager.GetUsersInRoleAsync(role);
     }
 
-    public async Task<(ApplicationUser user, string role, bool newUser)> GetUserByEmailAsync(string email)
+    public async Task<(ApplicationUser user, string role)> GetUserByEmailAsync(string email)
     {
         var user = await _userManager.FindByEmailAsync(email);
-
-        bool newUser = false;
 
         if (user == null)
         {
@@ -107,8 +103,6 @@ public class IdentityService : IIdentityService
             user = await _userManager.FindByEmailAsync(email);
 
             await _userManager.AddToRoleAsync(user!, Role.Customer);
-
-            newUser = true;
         }
 
         // check if user is locked
@@ -117,7 +111,7 @@ public class IdentityService : IIdentityService
         var role = await _userManager.GetRolesAsync(user!)
             .ContinueWith(task => task.Result.FirstOrDefault());
 
-        return (user!, role!, newUser);
+        return (user!, role!);
     }
 
     public async Task<string?> GetUserNameAsync(string userId)
@@ -134,16 +128,27 @@ public class IdentityService : IIdentityService
         return user != null && await _userManager.IsInRoleAsync(user, role);
     }
 
-    public async Task LockAccountAsync(Guid userId, DateTimeOffset lockoutEnd)
+    public async Task LockAccountAsync(Guid userId)
     {
-        var user = await _userManager.FindByIdAsync(userId.ToString());
+        var user = await _userManager.FindByIdAsync(userId.ToString())
+            ?? throw new NotFoundException(nameof(ApplicationUser), userId);
 
         if (await _userManager.IsLockedOutAsync(user!))
         {
             throw new BadRequestException("Account is already locked");
         }
 
-        await _userManager.SetLockoutEndDateAsync(user!, lockoutEnd);
+        user.LockoutCount++;
+        var lockoutDuration = user.LockoutCount switch
+        {
+            1 => DateTimeOffset.UtcNow.AddDays(1),
+            2 => DateTimeOffset.UtcNow.AddDays(7),
+            3 => DateTimeOffset.UtcNow.AddDays(30),
+            4 => DateTimeOffset.MaxValue,
+            _ => DateTimeOffset.MaxValue,
+        };
+
+        await _userManager.SetLockoutEndDateAsync(user!, lockoutDuration);
     }
 
     public async Task<(ApplicationUser user, string role)> LoginAsync(string email, string password)
@@ -192,12 +197,15 @@ public class IdentityService : IIdentityService
 
     public async Task UnlockAccountAsync(Guid userId)
     {
-        var user = await _userManager.FindByIdAsync(userId.ToString());
+        var user = await _userManager.FindByIdAsync(userId.ToString())
+            ?? throw new NotFoundException(nameof(ApplicationUser), userId);
 
         if (!await _userManager.IsLockedOutAsync(user!))
         {
             throw new BadRequestException("Account is not locked");
         }
+
+        user.LockoutCount = 0;
 
         await _userManager.SetLockoutEndDateAsync(user!, null);
     }

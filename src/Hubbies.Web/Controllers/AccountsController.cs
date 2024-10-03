@@ -9,7 +9,7 @@ namespace Hubbies.Web.Controllers;
 public class AccountsController(IAccountService accountService)
     : ControllerBase
 {
-    [Authorize(Policy.Admin)]
+    // [Authorize(Policy.Admin)]
     [HttpGet("{accountId:guid}", Name = "GetAccountById")]
     [ProducesResponseType(typeof(AccountDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -20,17 +20,17 @@ public class AccountsController(IAccountService accountService)
         return Ok(account);
     }
 
-    [Authorize(Policy.Admin)]
-    [HttpGet("manager", Name = "GetManagers")]
+    // [Authorize(Policy.Admin)]
+    [HttpGet("event-hosts", Name = "GetEventHosts")]
     [ProducesResponseType(typeof(IEnumerable<AccountDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetManagersAsync()
+    public async Task<IActionResult> GetEventHostsAsync()
     {
-        var managers = await accountService.GetAccountsAsync(Role.Manager);
+        var eventHostAccounts = await accountService.GetAccountsAsync(Role.EventHost);
 
-        return Ok(managers);
+        return Ok(eventHostAccounts);
     }
 
-    [Authorize(Policy.Administrative)]
+    [Authorize(Policy.Admin)]
     [HttpPut("customer/{customerId:guid}/lock", Name = "LockCustomer")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -41,7 +41,7 @@ public class AccountsController(IAccountService accountService)
         return NoContent();
     }
 
-    [Authorize(Policy.Admin)]
+    // [Authorize(Policy.Admin)]
     [HttpPut("customer/{customerId:guid}/unlock", Name = "UnlockCustomer")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]

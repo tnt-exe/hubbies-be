@@ -4,8 +4,7 @@ public class AccountRepository(
     IApplicationDbContext context,
     IServiceProvider serviceProvider,
     IIdentityService identityService,
-    IMapper mapper,
-    IUser user)
+    IMapper mapper)
     : BaseRepository(context, mapper, serviceProvider), IAccountService
 {
     public async Task<AccountDto> GetAccountAsync(Guid id)
@@ -22,40 +21,17 @@ public class AccountRepository(
         return Mapper.Map<IEnumerable<AccountDto>>(accounts);
     }
 
-    public async Task LockAccountAsync(Guid customerId)
+    public async Task LockAccountAsync(Guid userId)
     {
-        // var customerAccount = await Context.Customers
-        //     .Include(c => c.IdentityUser)
-        //     .FirstOrDefaultAsync(c => c.Id == customerId)
-        //     ?? throw new NotFoundException(nameof(Customer), customerId);
+        await identityService.LockAccountAsync(userId);
 
-        // // increase lockout count
-        // customerAccount.LockoutCount++;
-        // var lockoutDuration = customerAccount.LockoutCount switch
-        // {
-        //     1 => DateTimeOffset.UtcNow.AddDays(1),
-        //     2 => DateTimeOffset.UtcNow.AddDays(7),
-        //     3 => DateTimeOffset.UtcNow.AddDays(30),
-        //     4 => DateTimeOffset.MaxValue,
-        //     _ => DateTimeOffset.MaxValue,
-        // };
-        // await identityService.LockAccountAsync(customerAccount.IdentityUser!.Id, lockoutDuration);
-
-        // await Context.SaveChangesAsync();
+        await Context.SaveChangesAsync();
     }
 
-    public async Task UnlockAccountAsync(Guid customerId)
+    public async Task UnlockAccountAsync(Guid userId)
     {
-        // var customerAccount = await Context.Customers
-        //     .Include(c => c.IdentityUser)
-        //     .FirstOrDefaultAsync(c => c.Id == customerId)
-        //     ?? throw new NotFoundException(nameof(Customer), customerId);
+        await identityService.UnlockAccountAsync(userId);
 
-        // await identityService.UnlockAccountAsync(customerAccount.IdentityUser!.Id);
-
-        // // reset lockout count
-        // customerAccount.LockoutCount = 0;
-
-        // await Context.SaveChangesAsync();
+        await Context.SaveChangesAsync();
     }
 }

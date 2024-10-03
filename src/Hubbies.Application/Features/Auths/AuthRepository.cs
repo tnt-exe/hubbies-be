@@ -76,16 +76,7 @@ public class AuthRepository(
     {
         await ValidateAsync(request);
 
-        var userId = await identityService.CreateUserAsync(request.Email!, request.Password!);
-
-        // Customer customer = new()
-        // {
-        //     IdentityUserId = Guid.Parse(userId),
-        // };
-
-        // await Context.Customers.AddAsync(customer);
-
-        await Context.SaveChangesAsync();
+        await identityService.CreateUserAsync(request.Email!, request.Password!);
     }
 
     public async Task<AccessTokenResponse> TokenLoginAsync(TokenLoginRequest request)
@@ -95,18 +86,6 @@ public class AuthRepository(
         var email = await firebaseService.GetEmailFromTokenAsync(request.Token!);
 
         var userByEmail = await identityService.GetUserByEmailAsync(email);
-
-        if (userByEmail.newUser)
-        {
-            // Customer customer = new()
-            // {
-            //     IdentityUserId = userByEmail.user.Id,
-            // };
-
-            // await Context.Customers.AddAsync(customer);
-
-            // await Context.SaveChangesAsync();
-        }
 
         var (accessToken, expired) = jwtService.GenerateJwtToken(userByEmail.user, userByEmail.role);
 

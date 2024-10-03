@@ -1,6 +1,5 @@
 ﻿using FirebaseAdmin;
 using FirebaseAdmin.Auth;
-using FirebaseAdmin.Messaging;
 using Google.Apis.Auth.OAuth2;
 
 namespace Hubbies.Infrastructure.Auth;
