@@ -4,6 +4,10 @@ public partial class MapperConfigure : Profile
 {
     public MapperConfigure()
     {
-
+        AccountProfile();
+        EventCategoryProfile();
+        TicketEventProfile();
+        FeedbackProfile();
+        OrderProfile();
     }
 }
