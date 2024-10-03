@@ -1,0 +1,90 @@
+namespace Hubbies.Application.Features.Feedbacks;
+
+public class FeedbackRepository(IApplicationDbContext context, IMapper mapper, IServiceProvider serviceProvider, IUser user)
+    : BaseRepository(context, mapper, serviceProvider), IFeedbackService
+{
+    public async Task<FeedbackDto> CreateFeedbackAsync(CreateFeedbackRequest request)
+    {
+        await ValidateAsync(request);
+
+        var feedback = Mapper.Map<Feedback>(request);
+
+        feedback.UserId = Guid.Parse(user.Id!);
+
+        await Context.Feedbacks.AddAsync(feedback);
+
+        await Context.SaveChangesAsync();
+
+        return Mapper.Map<FeedbackDto>(feedback);
+    }
+
+    public async Task DeleteFeedbackAsync(Guid userId, Guid ticketEventId)
+    {
+        var feedback = await Context.Feedbacks
+            .Where(x => x.IsDeleted == false)
+            .Where(x => x.Status == FeedbackStatus.Approved)
+            .FirstOrDefaultAsync(x => x.UserId == userId && x.TicketEventId == ticketEventId)
+            ?? throw new NotFoundException(nameof(Feedback), new { UserId = userId, TicketEventId = ticketEventId });
+
+        Context.Feedbacks.Remove(feedback);
+
+        await Context.SaveChangesAsync();
+    }
+
+    public async Task FeedbackApprovalAsync(Guid userId, Guid ticketEventId, FeedbackStatus approvalStatus)
+    {
+        var feedback = await Context.Feedbacks
+            .Where(x => x.IsDeleted == false)
+            .FirstOrDefaultAsync(x => x.UserId == userId && x.TicketEventId == ticketEventId)
+            ?? throw new NotFoundException(nameof(Feedback), new { UserId = userId, TicketEventId = ticketEventId });
+
+        feedback.Status = approvalStatus;
+
+        await Context.SaveChangesAsync();
+    }
+
+    public async Task<FeedbackDto> GetFeedbackAsync(Guid userId, Guid ticketEventId)
+    {
+        var feedback = await Context.Feedbacks
+            .AsNoTracking()
+            .Where(x => x.IsDeleted == false)
+            .Where(x => x.Status == FeedbackStatus.Approved)
+            .FirstOrDefaultAsync(x => x.UserId == userId && x.TicketEventId == ticketEventId)
+            ?? throw new NotFoundException(nameof(Feedback), new { UserId = userId, TicketEventId = ticketEventId });
+
+        return Mapper.Map<FeedbackDto>(feedback);
+    }
+
+    public async Task<PaginationResponse<FeedbackDto>> GetFeedbacksAsync(FeedbackQueryParameter queryParameter)
+    {
+        await ValidateAsync(queryParameter);
+
+        var feedbacks = await Context.Feedbacks
+            .AsNoTracking()
+            .Where(x => x.IsDeleted == false)
+            .Where(x => x.Status == FeedbackStatus.Approved)
+            .Filter(queryParameter)
+            .ToPaginationResponseAsync<Feedback, FeedbackDto>(queryParameter, Mapper);
+
+        return feedbacks;
+    }
+
+    public async Task<FeedbackDto> UpdateFeedbackAsync(Guid ticketEventId, UpdateFeedbackRequest request)
+    {
+        await ValidateAsync(request);
+
+        var userId = Guid.Parse(user.Id!);
+
+        var feedback = await Context.Feedbacks
+            .Where(x => x.IsDeleted == false)
+            .Where(x => x.Status == FeedbackStatus.Approved)
+            .FirstOrDefaultAsync(x => x.UserId == userId && x.TicketEventId == ticketEventId)
+            ?? throw new NotFoundException(nameof(Feedback), new { UserId = userId, TicketEventId = ticketEventId });
+
+        Mapper.Map(request, feedback);
+
+        await Context.SaveChangesAsync();
+
+        return Mapper.Map<FeedbackDto>(feedback);
+    }
+}
