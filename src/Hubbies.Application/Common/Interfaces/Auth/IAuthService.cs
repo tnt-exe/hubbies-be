@@ -10,7 +10,15 @@ public interface IAuthService
     /// <param name="request">The request to register</param>
     /// <exception cref="ValidationException">Thrown when the request is invalid</exception>
     /// <exception cref="ConflictException">Thrown when the user is already registered</exception>
-    public Task RegisterAsync(RegisterRequest request);
+    public Task RegisterCustomerAsync(RegisterRequest request);
+
+    /// <summary>
+    /// Register a new event host
+    /// </summary>
+    /// <param name="request">The request to register</param>
+    /// <exception cref="ValidationException">Thrown when the request is invalid</exception>
+    /// <exception cref="ConflictException">Thrown when the user is already registered</exception>
+    public Task RegisterEventHostAsync(RegisterRequest request);
 
     /// <summary>
     /// Login with pregiven token

@@ -1,4 +1,6 @@
-﻿namespace Hubbies.Application.Features.Auths;
+﻿using Hubbies.Domain.Constant;
+
+namespace Hubbies.Application.Features.Auths;
 
 public class AuthRepository(
     IApplicationDbContext context,
@@ -72,11 +74,18 @@ public class AuthRepository(
         };
     }
 
-    public async Task RegisterAsync(RegisterRequest request)
+    public async Task RegisterCustomerAsync(RegisterRequest request)
     {
         await ValidateAsync(request);
 
-        await identityService.CreateUserAsync(request.Email!, request.Password!);
+        await identityService.CreateUserAsync(request.Email!, request.Password!, Role.Customer);
+    }
+
+    public async Task RegisterEventHostAsync(RegisterRequest request)
+    {
+        await ValidateAsync(request);
+
+        await identityService.CreateUserAsync(request.Email!, request.Password!, Role.EventHost);
     }
 
     public async Task<AccessTokenResponse> TokenLoginAsync(TokenLoginRequest request)

@@ -57,7 +57,7 @@ public class IdentityService : IIdentityService
         return (result.Succeeded, role.Id.ToString());
     }
 
-    public async Task<string> CreateUserAsync(string userName, string password)
+    public async Task<string> CreateUserAsync(string userName, string password, string role)
     {
         var user = new ApplicationUser
         {
@@ -72,7 +72,7 @@ public class IdentityService : IIdentityService
             throw new ConflictException(result.Errors);
         }
 
-        await _userManager.AddToRoleAsync(user, Role.Customer);
+        await _userManager.AddToRoleAsync(user, role);
 
         return user.Id.ToString();
     }

@@ -23,6 +23,7 @@ public interface IIdentityService
     /// </summary>
     /// <param name="userName">Username of the user</param>
     /// <param name="password">Password of the user</param>
+    /// <param name="role">The role of the user</param>
     /// <returns>
     /// The user's ID if the user.
     /// </returns>
@@ -30,7 +31,7 @@ public interface IIdentityService
     /// Be noted that the ID still created even if the user was not created successfully
     /// </remarks>
     /// <exception cref="ConflictException">Thrown when the user already exists</exception>
-    Task<string> CreateUserAsync(string userName, string password);
+    Task<string> CreateUserAsync(string userName, string password, string role);
 
     /// <summary>
     /// Create new role, in case the role already exists, return the role ID

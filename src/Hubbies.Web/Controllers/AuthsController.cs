@@ -11,13 +11,24 @@ namespace Hubbies.Web.Controllers;
 public class AuthsController(IAuthService authService)
     : ControllerBase
 {
-    [HttpPost("register", Name = "Register")]
+    [HttpPost("customer/register", Name = "CustomerRegister")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
-    public async Task<IActionResult> RegisterAsync(RegisterRequest request)
+    public async Task<IActionResult> RegisterCustomerAsync(RegisterRequest request)
     {
-        await authService.RegisterAsync(request);
+        await authService.RegisterCustomerAsync(request);
+
+        return Ok();
+    }
+
+    [HttpPost("event-host/register", Name = "EventHostRegister")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> RegisterEventHostAsync(RegisterRequest request)
+    {
+        await authService.RegisterEventHostAsync(request);
 
         return Ok();
     }
