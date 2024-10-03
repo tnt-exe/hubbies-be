@@ -17,8 +17,7 @@ public class FeedbackApprovalRequestValidator : AbstractValidator<FeedbackApprov
         RuleFor(x => x.TicketEventId)
             .NotEmpty();
 
-        RuleFor(x => x.ApprovalStatus)
-            .IsInEnum()
-            .WithMessage("Approval Status is invalid.");
+        RuleFor(x => x.ApprovalStatus.ToString())
+            .IsEnumName(typeof(FeedbackStatus));
     }
 }

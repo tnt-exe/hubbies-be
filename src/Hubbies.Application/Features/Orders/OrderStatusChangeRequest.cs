@@ -13,8 +13,7 @@ public class OrderStatusChangeRequestValidator : AbstractValidator<OrderStatusCh
         RuleFor(x => x.OrderId)
             .NotEmpty();
 
-        RuleFor(x => x.Status)
-            .IsInEnum()
-            .WithMessage("Invalid order status.");
+        RuleFor(x => x.Status.ToString())
+            .IsEnumName(typeof(OrderStatus));
     }
 }

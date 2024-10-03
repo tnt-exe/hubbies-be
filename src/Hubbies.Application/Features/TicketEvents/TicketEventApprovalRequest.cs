@@ -13,8 +13,7 @@ public class TicketEventApprovalRequestValidator : AbstractValidator<TicketEvent
         RuleFor(x => x.TicketEventId)
             .NotEmpty();
 
-        RuleFor(x => x.ApprovalStatus)
-            .IsInEnum()
-            .WithMessage("Approval Status is invalid.");
+        RuleFor(x => x.ApprovalStatus.ToString())
+            .IsEnumName(typeof(TicketApprovalStatus));
     }
 }
