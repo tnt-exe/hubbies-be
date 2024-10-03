@@ -18,7 +18,7 @@ public class FeedbacksController(IFeedbackService feedbackService)
         return Ok(response);
     }
 
-    [HttpGet("user/{userId}/ticket-event/{ticketEventId}", Name = "GetFeedback")]
+    [HttpGet("user/{userId:guid}/ticket-event/{ticketEventId:guid}", Name = "GetFeedback")]
     [ProducesResponseType(typeof(FeedbackDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetFeedbackAsync(Guid userId, Guid ticketEventId)
@@ -28,6 +28,7 @@ public class FeedbacksController(IFeedbackService feedbackService)
         return Ok(response);
     }
 
+    [Authorize(Policy.Customer)]
     [HttpPost(Name = "CreateFeedback")]
     [ProducesResponseType(typeof(FeedbackDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
@@ -38,7 +39,8 @@ public class FeedbacksController(IFeedbackService feedbackService)
         return CreatedAtRoute("GetFeedback", new { userId = response.UserId, ticketEventId = response.TicketEventId }, response);
     }
 
-    [HttpPut("ticket-event/{ticketEventId}", Name = "UpdateFeedback")]
+    [Authorize(Policy.Customer)]
+    [HttpPut("ticket-event/{ticketEventId:guid}", Name = "UpdateFeedback")]
     [ProducesResponseType(typeof(FeedbackDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
@@ -49,7 +51,8 @@ public class FeedbacksController(IFeedbackService feedbackService)
         return Ok(response);
     }
 
-    [HttpDelete("user/{userId}/ticket-event/{ticketEventId}", Name = "DeleteFeedback")]
+    [Authorize(Policy.Customer)]
+    [HttpDelete("user/{userId:guid}/ticket-event/{ticketEventId:guid}", Name = "DeleteFeedback")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteFeedbackAsync(Guid userId, Guid ticketEventId)
@@ -59,6 +62,7 @@ public class FeedbacksController(IFeedbackService feedbackService)
         return NoContent();
     }
 
+    [Authorize(Policy.Admin)]
     [HttpPut("approval", Name = "FeedbackApproval")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]

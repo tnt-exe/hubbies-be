@@ -18,7 +18,7 @@ public class EventCategoriesController(IEventCategoryService eventCategoryServic
         return Ok(response);
     }
 
-    [HttpGet("{eventCategoryId}", Name = "GetEventCategory")]
+    [HttpGet("{eventCategoryId:guid}", Name = "GetEventCategory")]
     [ProducesResponseType(typeof(EventCategoryDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetEventCategoryAsync(Guid eventCategoryId)
@@ -28,6 +28,7 @@ public class EventCategoriesController(IEventCategoryService eventCategoryServic
         return Ok(response);
     }
 
+    [Authorize(Policy.Admin)]
     [HttpPost(Name = "CreateEventCategory")]
     [ProducesResponseType(typeof(EventCategoryDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
@@ -38,7 +39,8 @@ public class EventCategoriesController(IEventCategoryService eventCategoryServic
         return CreatedAtRoute("GetEventCategory", new { eventCategoryId = response.Id }, response);
     }
 
-    [HttpPut("{eventCategoryId}", Name = "UpdateEventCategory")]
+    [Authorize(Policy.Admin)]
+    [HttpPut("{eventCategoryId:guid}", Name = "UpdateEventCategory")]
     [ProducesResponseType(typeof(EventCategoryDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
@@ -49,7 +51,8 @@ public class EventCategoriesController(IEventCategoryService eventCategoryServic
         return Ok(response);
     }
 
-    [HttpDelete("{eventCategoryId}", Name = "DeleteEventCategory")]
+    [Authorize(Policy.Admin)]
+    [HttpDelete("{eventCategoryId:guid}", Name = "DeleteEventCategory")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteEventCategoryAsync(Guid eventCategoryId)

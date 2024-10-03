@@ -20,7 +20,7 @@ public class OrdersController(IOrderService orderService)
         return Ok(response);
     }
 
-    [HttpGet("{orderId}", Name = "GetOrder")]
+    [HttpGet("{orderId:guid}", Name = "GetOrder")]
     [ProducesResponseType(typeof(OrderDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetOrderAsync(Guid orderId, [FromQuery] OrderIncludeParameter includeParameter)
@@ -30,6 +30,7 @@ public class OrdersController(IOrderService orderService)
         return Ok(response);
     }
 
+    [Authorize(Policy.Customer)]
     [HttpPost(Name = "CreateOrder")]
     [ProducesResponseType(typeof(OrderDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
@@ -40,6 +41,7 @@ public class OrdersController(IOrderService orderService)
         return CreatedAtRoute("GetOrder", new { orderId = response.Id }, response);
     }
 
+    [Authorize]
     [HttpPut("status", Name = "UpdateOrderStatus")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]

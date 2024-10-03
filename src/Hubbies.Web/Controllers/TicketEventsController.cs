@@ -20,7 +20,7 @@ public class TicketEventsController(ITicketEventService ticketEventService)
         return Ok(response);
     }
 
-    [HttpGet("{ticketEventId}", Name = "GetTicketEvent")]
+    [HttpGet("{ticketEventId:guid}", Name = "GetTicketEvent")]
     [ProducesResponseType(typeof(TicketEventDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetTicketEventAsync(
@@ -32,6 +32,7 @@ public class TicketEventsController(ITicketEventService ticketEventService)
         return Ok(response);
     }
 
+    [Authorize(Policy.EventHost)]
     [HttpPost(Name = "CreateTicketEvent")]
     [ProducesResponseType(typeof(TicketEventDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
@@ -42,7 +43,8 @@ public class TicketEventsController(ITicketEventService ticketEventService)
         return CreatedAtRoute("GetTicketEvent", new { ticketEventId = response.Id }, response);
     }
 
-    [HttpPut("{ticketEventId}", Name = "UpdateTicketEvent")]
+    [Authorize(Policy.EventHost)]
+    [HttpPut("{ticketEventId:guid}", Name = "UpdateTicketEvent")]
     [ProducesResponseType(typeof(TicketEventDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
@@ -53,7 +55,8 @@ public class TicketEventsController(ITicketEventService ticketEventService)
         return Ok(response);
     }
 
-    [HttpDelete("{ticketEventId}", Name = "DeleteTicketEvent")]
+    [Authorize(Policy.EventHost)]
+    [HttpDelete("{ticketEventId:guid}", Name = "DeleteTicketEvent")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteTicketEventAsync(Guid ticketEventId)
@@ -63,6 +66,7 @@ public class TicketEventsController(ITicketEventService ticketEventService)
         return NoContent();
     }
 
+    [Authorize(Policy.Admin)]
     [HttpPut("approval", Name = "TicketEventApproval")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> TicketEventApprovalAsync([FromQuery] TicketEventApprovalRequest approvalRequest)
