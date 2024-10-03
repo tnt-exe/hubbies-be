@@ -31,14 +31,19 @@ public class FeedbackRepository(IApplicationDbContext context, IMapper mapper, I
         await Context.SaveChangesAsync();
     }
 
-    public async Task FeedbackApprovalAsync(Guid userId, Guid ticketEventId, FeedbackStatus approvalStatus)
+    public async Task FeedbackApprovalAsync(FeedbackApprovalRequest approvalRequest)
     {
+        await ValidateAsync(approvalRequest);
+
         var feedback = await Context.Feedbacks
             .Where(x => x.IsDeleted == false)
-            .FirstOrDefaultAsync(x => x.UserId == userId && x.TicketEventId == ticketEventId)
-            ?? throw new NotFoundException(nameof(Feedback), new { UserId = userId, TicketEventId = ticketEventId });
+            .FirstOrDefaultAsync(x => x.UserId == approvalRequest.UserId
+                                && x.TicketEventId == approvalRequest.TicketEventId)
+            ?? throw new NotFoundException(
+                nameof(Feedback),
+                new { approvalRequest.UserId, approvalRequest.TicketEventId });
 
-        feedback.Status = approvalStatus;
+        feedback.Status = approvalRequest.ApprovalStatus;
 
         await Context.SaveChangesAsync();
     }

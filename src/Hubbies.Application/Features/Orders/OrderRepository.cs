@@ -76,13 +76,15 @@ public class OrderRepository(IApplicationDbContext context, IMapper mapper, ISer
         return orders;
     }
 
-    public async Task OrderStatusChangeAsync(Guid id, OrderStatus status)
+    public async Task OrderStatusChangeAsync(OrderStatusChangeRequest orderStatus)
     {
-        var order = await Context.Orders
-            .FirstOrDefaultAsync(x => x.Id == id)
-            ?? throw new NotFoundException(nameof(Order), id);
+        await ValidateAsync(orderStatus);
 
-        order.Status = status;
+        var order = await Context.Orders
+            .FirstOrDefaultAsync(x => x.Id == orderStatus.OrderId)
+            ?? throw new NotFoundException(nameof(Order), orderStatus.OrderId);
+
+        order.Status = orderStatus.Status;
 
         await Context.SaveChangesAsync();
     }

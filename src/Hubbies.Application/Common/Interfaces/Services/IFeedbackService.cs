@@ -14,5 +14,5 @@ public interface IFeedbackService
 
     Task DeleteFeedbackAsync(Guid userId, Guid ticketEventId);
 
-    Task FeedbackApprovalAsync(Guid userId, Guid ticketEventId, FeedbackStatus approvalStatus);
+    Task FeedbackApprovalAsync(FeedbackApprovalRequest approvalRequest);
 }

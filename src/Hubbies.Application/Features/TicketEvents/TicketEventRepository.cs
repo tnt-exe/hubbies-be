@@ -3,14 +3,16 @@ namespace Hubbies.Application.Features.TicketEvents;
 public class TicketEventRepository(IApplicationDbContext context, IMapper mapper, IServiceProvider serviceProvider)
     : BaseRepository(context, mapper, serviceProvider), ITicketEventService
 {
-    public async Task TicketEventApprovalAsync(Guid id, TicketApprovalStatus approvalStatus)
+    public async Task TicketEventApprovalAsync(TicketEventApprovalRequest approvalRequest)
     {
+        await ValidateAsync(approvalRequest);
+
         var ticketEvent = await Context.TicketEvents
             .Where(x => x.IsDeleted == false)
-            .FirstOrDefaultAsync(x => x.Id == id)
-            ?? throw new NotFoundException(nameof(TicketEvent), id);
+            .FirstOrDefaultAsync(x => x.Id == approvalRequest.TicketEventId)
+            ?? throw new NotFoundException(nameof(TicketEvent), approvalRequest.TicketEventId);
 
-        ticketEvent.ApprovalStatus = approvalStatus;
+        ticketEvent.ApprovalStatus = approvalRequest.ApprovalStatus;
 
         await Context.SaveChangesAsync();
     }

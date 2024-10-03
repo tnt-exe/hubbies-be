@@ -11,5 +11,5 @@ public interface IOrderService
 
     Task<OrderDto> CreateOrderAsync(CreateOrderRequest request);
 
-    Task OrderStatusChangeAsync(Guid id, OrderStatus status);
+    Task OrderStatusChangeAsync(OrderStatusChangeRequest orderStatus);
 }

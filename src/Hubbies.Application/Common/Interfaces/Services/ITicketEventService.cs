@@ -15,5 +15,5 @@ public interface ITicketEventService
 
     Task DeleteTicketEventAsync(Guid id);
 
-    Task TicketEventApprovalAsync(Guid id, TicketApprovalStatus approvalStatus);
+    Task TicketEventApprovalAsync(TicketEventApprovalRequest approvalRequest);
 }
