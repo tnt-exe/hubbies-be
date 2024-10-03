@@ -1,9 +1,13 @@
 ﻿namespace Hubbies.Infrastructure.Persistence;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options), IApplicationDbContext
+    : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options), IApplicationDbContext
 {
-    //dbset
+    public DbSet<EventCategory> EventCategories { get; set; }
+    public DbSet<Feedback> Feedbacks { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderDetails> OrderDetails { get; set; }
+    public DbSet<TicketEvent> TicketEvents { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
