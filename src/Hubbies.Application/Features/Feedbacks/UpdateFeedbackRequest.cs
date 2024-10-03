@@ -20,7 +20,6 @@ public class UpdateFeedbackRequestValidator : AbstractValidator<UpdateFeedbackRe
 
         RuleFor(x => x.Rating)
             .NotEmpty()
-            .InclusiveBetween(1, 5)
-            .WithMessage("{PropertyName} must be between 1 and 5.");
+            .InclusiveBetween(1, 5);
     }
 }

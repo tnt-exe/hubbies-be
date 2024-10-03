@@ -4,7 +4,7 @@ public record FeedbackQueryParameter : PaginationQueryParameter
 {
     public Guid TicketEventId { get; init; }
     public Guid UserId { get; init; }
-    public int Rating { get; set; }
+    public int? Rating { get; set; }
 }
 
 public class FeedbackQueryParameterValidator : AbstractValidator<FeedbackQueryParameter>
@@ -14,8 +14,7 @@ public class FeedbackQueryParameterValidator : AbstractValidator<FeedbackQueryPa
         Include(new PaginationQueryParameterValidator());
 
         RuleFor(x => x.Rating)
-            .InclusiveBetween(1, 5)
-            .WithMessage("Rating must be between 1 and 5.");
+            .InclusiveBetween(1, 5);
     }
 }
 
