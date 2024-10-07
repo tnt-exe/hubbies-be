@@ -1,4 +1,3 @@
-
 namespace Hubbies.Infrastructure.Persistence.Configurations;
 
 public class EventCategoryConfig : IEntityTypeConfiguration<EventCategory>

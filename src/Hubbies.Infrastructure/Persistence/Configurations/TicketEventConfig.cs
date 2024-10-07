@@ -1,5 +1,3 @@
-using Hubbies.Domain.Enums;
-
 namespace Hubbies.Infrastructure.Persistence.Configurations;
 
 public class TicketEventConfig : IEntityTypeConfiguration<TicketEvent>
