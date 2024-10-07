@@ -9,6 +9,10 @@ namespace Hubbies.Web.Controllers;
 public class EventCategoriesController(IEventCategoryService eventCategoryService)
     : ControllerBase
 {
+    /// <summary>
+    /// Get all event categories
+    /// </summary>
+    /// <response code="200">Returns all event categories</response>
     [HttpGet(Name = "GetEventCategories")]
     [ProducesResponseType(typeof(IEnumerable<EventCategoryDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetEventCategoriesAsync()
@@ -18,6 +22,12 @@ public class EventCategoriesController(IEventCategoryService eventCategoryServic
         return Ok(response);
     }
 
+    /// <summary>
+    /// Get event category by id
+    /// </summary>
+    /// <param name="eventCategoryId"></param>
+    /// <response code="200">Returns event category</response>
+    /// <response code="404">Event category not found</response>
     [HttpGet("{eventCategoryId:guid}", Name = "GetEventCategory")]
     [ProducesResponseType(typeof(EventCategoryDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -28,6 +38,22 @@ public class EventCategoriesController(IEventCategoryService eventCategoryServic
         return Ok(response);
     }
 
+    /// <summary>
+    /// Create event category
+    /// </summary>
+    /// <param name="request"></param>
+    /// <remarks>
+    /// Sample request:
+    /// 
+    ///     POST /api/event-categories
+    ///     {
+    ///         "address": "HCM",
+    ///         "name": "Cofi"
+    ///     }
+    ///    
+    /// </remarks>
+    /// <response code="201">Event category created</response>
+    /// <response code="422">Unprocessable entity</response>
     [Authorize(Policy.Admin)]
     [HttpPost(Name = "CreateEventCategory")]
     [ProducesResponseType(typeof(EventCategoryDto), StatusCodes.Status201Created)]
@@ -39,6 +65,25 @@ public class EventCategoriesController(IEventCategoryService eventCategoryServic
         return CreatedAtRoute("GetEventCategory", new { eventCategoryId = response.Id }, response);
     }
 
+    /// <summary>
+    /// Update event category
+    /// </summary>
+    /// <param name="eventCategoryId"></param>
+    /// <param name="request"></param>
+    /// <remarks>
+    /// Sample request:
+    /// 
+    ///     
+    ///     PUT /api/event-categories/{eventCategoryId}
+    ///     {
+    ///         "address": "HCM",
+    ///         "name": "Cofi"
+    ///     }
+    /// 
+    /// </remarks>
+    /// <response code="200">Event category updated</response>
+    /// <response code="404">Event category not found</response>
+    /// <response code="422">Unprocessable entity</response>
     [Authorize(Policy.Admin)]
     [HttpPut("{eventCategoryId:guid}", Name = "UpdateEventCategory")]
     [ProducesResponseType(typeof(EventCategoryDto), StatusCodes.Status200OK)]
@@ -51,6 +96,12 @@ public class EventCategoriesController(IEventCategoryService eventCategoryServic
         return Ok(response);
     }
 
+    /// <summary>
+    /// Delete event category
+    /// </summary>
+    /// <param name="eventCategoryId"></param>
+    /// <response code="204">Event category deleted</response>
+    /// <response code="404">Event category not found</response>
     [Authorize(Policy.Admin)]
     [HttpDelete("{eventCategoryId:guid}", Name = "DeleteEventCategory")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

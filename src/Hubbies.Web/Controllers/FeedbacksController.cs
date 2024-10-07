@@ -9,6 +9,11 @@ namespace Hubbies.Web.Controllers;
 public class FeedbacksController(IFeedbackService feedbackService)
     : ControllerBase
 {
+    /// <summary>
+    /// Get feedbacks with pagination
+    /// </summary>
+    /// <param name="queryParameter"></param>
+    /// <response code="200">Return feedbacks with pagination</response>
     [HttpGet(Name = "GetFeedbacks")]
     [ProducesResponseType(typeof(PaginationResponse<FeedbackDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetFeedbacksAsync([FromQuery] FeedbackQueryParameter queryParameter)
@@ -18,6 +23,13 @@ public class FeedbacksController(IFeedbackService feedbackService)
         return Ok(response);
     }
 
+    /// <summary>
+    /// Get feedback by user id and ticket event id
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="ticketEventId"></param>
+    /// <response code="200">Return feedback</response>
+    /// <response code="404">Feedback not found</response>
     [HttpGet("user/{userId:guid}/ticket-event/{ticketEventId:guid}", Name = "GetFeedback")]
     [ProducesResponseType(typeof(FeedbackDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -28,6 +40,23 @@ public class FeedbacksController(IFeedbackService feedbackService)
         return Ok(response);
     }
 
+    /// <summary>
+    /// Create feedback
+    /// </summary>
+    /// <param name="request"></param>
+    /// <remarks>
+    /// Sample request:
+    /// 
+    ///     POST /api/feedbacks
+    ///     {
+    ///         "ticketEventId": "00000000-0000-0000-0000-000000000000",
+    ///         "content": "This event succ",
+    ///         "rating": 2
+    ///     }
+    ///    
+    /// </remarks>
+    /// <response code="201">Return created feedback</response>
+    /// <response code="422">Validation error</response>
     [Authorize(Policy.Customer)]
     [HttpPost(Name = "CreateFeedback")]
     [ProducesResponseType(typeof(FeedbackDto), StatusCodes.Status201Created)]
@@ -39,6 +68,24 @@ public class FeedbacksController(IFeedbackService feedbackService)
         return CreatedAtRoute("GetFeedback", new { userId = response.UserId, ticketEventId = response.TicketEventId }, response);
     }
 
+    /// <summary>
+    /// Update feedback
+    /// </summary>
+    /// <param name="ticketEventId"></param>
+    /// <param name="request"></param>
+    /// <remarks>
+    /// Sample request:
+    /// 
+    ///     PUT /api/feedbacks/ticket-event/{ticketEventId}
+    ///     {
+    ///         "content": "This event is not that succ",
+    ///         "rating": 4
+    ///     }
+    ///    
+    /// </remarks>
+    /// <response code="200">Return updated feedback</response>
+    /// <response code="404">Feedback not found</response>
+    /// <response code="422">Validation error</response>
     [Authorize(Policy.Customer)]
     [HttpPut("ticket-event/{ticketEventId:guid}", Name = "UpdateFeedback")]
     [ProducesResponseType(typeof(FeedbackDto), StatusCodes.Status200OK)]
@@ -51,6 +98,13 @@ public class FeedbacksController(IFeedbackService feedbackService)
         return Ok(response);
     }
 
+    /// <summary>
+    /// Delete feedback
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="ticketEventId"></param>
+    /// <response code="204">Feedback deleted</response>
+    /// <response code="404">Feedback not found</response>
     [Authorize(Policy.Customer)]
     [HttpDelete("user/{userId:guid}/ticket-event/{ticketEventId:guid}", Name = "DeleteFeedback")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -62,6 +116,11 @@ public class FeedbacksController(IFeedbackService feedbackService)
         return NoContent();
     }
 
+    /// <summary>
+    /// Feedback approval
+    /// </summary>
+    /// <param name="approvalRequest"></param>
+    /// <response code="204">Feedback approved</response>
     [Authorize(Policy.Admin)]
     [HttpPut("approval", Name = "FeedbackApproval")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

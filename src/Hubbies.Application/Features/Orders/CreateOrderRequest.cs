@@ -4,7 +4,10 @@ namespace Hubbies.Application.Features.Orders;
 
 public record CreateOrderRequest
 {
+    /// <example>5</example>
     public int Quantity { get; init; }
+
+    /// <example>Q9, HCM</example>
     public string? Address { get; init; }
 
     public IEnumerable<CreateOrderDetailsRequest> OrderDetails { get; init; } = default!;

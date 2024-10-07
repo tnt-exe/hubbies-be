@@ -2,7 +2,6 @@
 
 public record AccountDto
 {
-    /// <example>00000000-0000-0000-0000-000000000000</example>
     public Guid Id { get; init; }
 
     /// <example>Monke</example>

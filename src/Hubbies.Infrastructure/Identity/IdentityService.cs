@@ -154,7 +154,7 @@ public class IdentityService : IIdentityService
     public async Task<(ApplicationUser user, string role)> LoginAsync(string email, string password)
     {
         var user = await _userManager.FindByEmailAsync(email)
-            ?? throw new UnauthorizedAccessException($"User with identifier '{email}' not found");
+            ?? throw new UnauthorizedAccessException($"Account with identifier '{email}' not found");
 
         // check if user is locked
         await CheckAccountLockoutAsync(user);
@@ -191,7 +191,7 @@ public class IdentityService : IIdentityService
         {
             var lockedOutEnd = await _userManager.GetLockoutEndDateAsync(user);
 
-            throw new UnauthorizedAccessException($"User is locked out until {lockedOutEnd.Value.LocalDateTime}");
+            throw new UnauthorizedAccessException($"Account is locked out until {lockedOutEnd.Value.LocalDateTime}");
         }
     }
 

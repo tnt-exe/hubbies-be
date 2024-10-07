@@ -2,13 +2,19 @@ namespace Hubbies.Application.Features.TicketEvents;
 
 public record TicketEventQueryParameter : PaginationQueryParameter
 {
+    /// <example>Cofi event</example>
     public string? Name { get; init; }
+
+    /// <example>Q9, HCM</example>
     public string? Address { get; init; }
 }
 
 public record TicketEventIncludeParameter
 {
+    /// <example>true</example>
     public bool IncludeEventCategory { get; init; }
+
+    /// <example>true</example>
     public bool IncludeFeedbacks { get; init; }
 }
 

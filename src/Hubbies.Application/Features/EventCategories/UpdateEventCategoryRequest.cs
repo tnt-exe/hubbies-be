@@ -2,7 +2,10 @@ namespace Hubbies.Application.Features.EventCategories;
 
 public record UpdateEventCategoryRequest
 {
+    /// <example>HCM</example>
     public string? Address { get; init; }
+
+    /// <example>Cofi</example>
     public string? Name { get; init; }
 }
 

@@ -9,6 +9,7 @@ public record OrderQueryParameter : PaginationQueryParameter
 
 public record OrderIncludeParameter
 {
+    /// <example>true</example>
     public bool IncludeOrderDetails { get; set; }
 }
 

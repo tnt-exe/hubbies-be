@@ -3,7 +3,11 @@ namespace Hubbies.Application.Features.Feedbacks;
 public record CreateFeedbackRequest
 {
     public Guid TicketEventId { get; init; }
+
+    /// <example>Event full of monkes, love it</example>
     public string? Content { get; init; }
+
+    /// <example>5</example>
     public int Rating { get; init; }
 }
 

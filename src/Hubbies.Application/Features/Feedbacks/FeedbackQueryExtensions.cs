@@ -4,6 +4,8 @@ public record FeedbackQueryParameter : PaginationQueryParameter
 {
     public Guid TicketEventId { get; init; }
     public Guid UserId { get; init; }
+
+    /// <example>5</example>
     public int? Rating { get; set; }
 }
 
