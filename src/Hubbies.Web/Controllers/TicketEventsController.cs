@@ -60,7 +60,7 @@ public class TicketEventsController(ITicketEventService ticketEventService)
     ///         "price": 100000,
     ///         "address": "HCM",
     ///         "postDate": "2024-10-10",
-    ///         "image": "Image 1",
+    ///         "image": "https://monke-cofi.com/image.jpg",
     ///         "eventCategoryId": "00000000-0000-0000-0000-000000000000"
     ///     }
     ///    
@@ -94,7 +94,7 @@ public class TicketEventsController(ITicketEventService ticketEventService)
     ///         "price": 100000,
     ///         "address": "HCM",
     ///         "postDate": "2024-10-10",
-    ///         "image": "Image 1",
+    ///         "image": "https://monke-cofi.com/image.jpg",
     ///         "eventCategoryId": "00000000-0000-0000-0000-000000000000"
     ///     }
     ///    

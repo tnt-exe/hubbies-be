@@ -99,6 +99,8 @@ public class AuthsController(IAuthService authService)
     /// </summary>
     /// <param name="request"></param>
     /// <remarks>
+    /// Incase user is not registered, the user will be registered as a customer
+    /// 
     /// Sample request:
     /// 
     ///     POST /api/auths/token-login
