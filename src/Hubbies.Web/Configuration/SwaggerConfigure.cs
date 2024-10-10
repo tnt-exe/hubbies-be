@@ -59,23 +59,8 @@ public static class SwaggerConfigure
 
             config.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
 
-            if (environment == "Development")
-            {
-                config.AddServer(new OpenApiServer
-                {
-                    Url = "http://localhost:5209",
-                    Description = "Local server - http"
-                });
-
-                config.AddServer(new OpenApiServer
-                {
-                    Url = "https://localhost:7299",
-                    Description = "Local server - https"
-                });
-            }
-
             var swaggerServers = configuration.GetSection("SwaggerServers").Get<List<OpenApiServer>>();
-            if (swaggerServers != null)
+            if (swaggerServers != null && environment != "Development")
             {
                 foreach (var server in swaggerServers)
                 {
