@@ -52,7 +52,6 @@ public class OrdersController(IOrderService orderService)
     /// 
     ///     POST /api/orders
     ///     {
-    ///         "quantity": 2,
     ///         "address": "HCM",
     ///         "orderDetails": [
     ///             {
