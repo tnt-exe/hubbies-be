@@ -52,7 +52,9 @@ public static class TicketEventQueryExtensions
 
         if (parameter.IncludeFeedbacks)
         {
-            query = query.Include(x => x.Feedbacks);
+            query = query
+                .Include(x => x.Feedbacks)
+                .Where(x => x.Feedbacks.All(f => f.Status == FeedbackStatus.Approved));
         }
 
         return query;
