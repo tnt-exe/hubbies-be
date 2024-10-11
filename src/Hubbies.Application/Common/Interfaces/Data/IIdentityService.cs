@@ -93,10 +93,10 @@ public interface IIdentityService
     /// <summary>
     /// Get the user with the given ID
     /// </summary>
-    /// <param name="id">The ID of the user</param>
+    /// <param name="userId">The ID of the user</param>
     /// <returns>The user with the given ID</returns>
     /// <exception cref="NotFoundException">Thrown if the user not found</exception>
-    Task<ApplicationUser> GetAccountAsync(Guid id);
+    Task<ApplicationUser> GetAccountAsync(Guid userId);
 
     /// <summary>
     /// Get all users with the given role

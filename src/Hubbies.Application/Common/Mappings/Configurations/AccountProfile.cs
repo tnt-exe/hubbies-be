@@ -6,6 +6,12 @@ public partial class MapperConfigure : Profile
 {
     void AccountProfile()
     {
-        CreateMap<ApplicationUser, AccountDto>().ReverseMap();
+        CreateMap<ApplicationUser, AccountDto>()
+            .ForMember(dest => dest.Dob, opt => opt.MapFrom(src => src.Dob.GetValueOrDefault().ToLocalTime()))
+            .ReverseMap();
+
+        CreateMap<ApplicationUser, UpdateAccountInformationRequest>()
+            .ReverseMap()
+            .ForMember(dest => dest.Dob, opt => opt.MapFrom(src => src.Dob.GetValueOrDefault().ToUniversalTime()));
     }
 }

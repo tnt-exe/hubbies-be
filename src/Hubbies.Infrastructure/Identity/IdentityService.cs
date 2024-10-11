@@ -77,10 +77,10 @@ public class IdentityService : IIdentityService
         return user.Id.ToString();
     }
 
-    public async Task<ApplicationUser> GetAccountAsync(Guid id)
+    public async Task<ApplicationUser> GetAccountAsync(Guid userId)
     {
-        return await _userManager.FindByIdAsync(id.ToString())
-            ?? throw new NotFoundException(nameof(ApplicationUser), id);
+        return await _userManager.FindByIdAsync(userId.ToString())
+            ?? throw new NotFoundException(nameof(ApplicationUser), userId);
     }
 
     public async Task<IEnumerable<ApplicationUser>> GetAccountsAsync(string role)

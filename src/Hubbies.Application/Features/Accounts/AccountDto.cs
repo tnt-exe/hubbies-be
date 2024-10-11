@@ -13,9 +13,11 @@ public record AccountDto
     /// <example>094278290</example>
     public string? PhoneNumber { get; init; }
 
-    /// <example>2024-10-10T00:00:00+00:00</example>
-    public DateTimeOffset? LockoutEnd { get; set; }
+    /// <example>Q9, HCM</example>
+    public string? Address { get; set; }
 
-    /// <example>False</example>
+    public DateTimeOffset? Dob { get; set; }
+    public DateTimeOffset? LockoutEnd { get; set; }
     public bool LockoutEnabled { get; set; }
+    public int LockoutCount { get; set; }
 }

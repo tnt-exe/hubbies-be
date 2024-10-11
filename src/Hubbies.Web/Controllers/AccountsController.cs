@@ -55,6 +55,36 @@ public class AccountsController(IAccountService accountService)
     }
 
     /// <summary>
+    /// Update account information
+    /// </summary>
+    /// <param name="request"></param>
+    /// <remarks>
+    /// Sample request:
+    /// 
+    ///     PUT /api/accounts
+    ///     {
+    ///         "address": "Q9, HCM",
+    ///         "dob": "2002-09-25"
+    ///         "phoneNumber": "0942782940"
+    ///     }
+    ///     
+    /// </remarks>
+    /// <response code="200">The account was updated</response>
+    /// <response code="404">The account was not found</response>
+    /// <response code="422">The request is invalid</response>
+    [Authorize]
+    [HttpPut(Name = "UpdateAccountInformation")]
+    [ProducesResponseType(typeof(AccountDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> UpdateAccountInformationAsync(UpdateAccountInformationRequest request)
+    {
+        var account = await accountService.UpdateAccountInformationAsync(request);
+
+        return Ok(account);
+    }
+
+    /// <summary>
     /// Lock an account
     /// </summary>
     /// <remarks>
