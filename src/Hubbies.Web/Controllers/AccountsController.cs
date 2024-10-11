@@ -27,6 +27,20 @@ public class AccountsController(IAccountService accountService)
     }
 
     /// <summary>
+    /// Get account information
+    /// </summary>
+    /// <response code="200">The account information</response>
+    [Authorize]
+    [HttpGet(Name = "GetAccountInformation")]
+    [ProducesResponseType(typeof(AccountDto), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAccountInformationAsync()
+    {
+        var account = await accountService.GetAccountAsync(null);
+
+        return Ok(account);
+    }
+
+    /// <summary>
     /// Get all customer accounts
     /// </summary>
     /// <response code="200">The customer accounts list</response>
@@ -63,9 +77,13 @@ public class AccountsController(IAccountService accountService)
     /// 
     ///     PUT /api/accounts
     ///     {
+    ///         "userName": "blaccmonkerox",
+    ///         "firstName": "Monke",
+    ///         "lastName": "Black",
     ///         "address": "Q9, HCM",
     ///         "dob": "2002-09-25"
-    ///         "phoneNumber": "0942782940"
+    ///         "phoneNumber": "0942782940",
+    ///         "avatar": "https://monke.com/avatar.jpg"
     ///     }
     ///     
     /// </remarks>

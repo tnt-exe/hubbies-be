@@ -8,9 +8,10 @@ public class AccountRepository(
     IUser user)
     : BaseRepository(context, mapper, serviceProvider), IAccountService
 {
-    public async Task<AccountDto> GetAccountAsync(Guid userId)
+    public async Task<AccountDto> GetAccountAsync(Guid? userId)
     {
-        var account = await identityService.GetAccountAsync(userId);
+        userId ??= Guid.Parse(user.Id!);
+        var account = await identityService.GetAccountAsync(userId.Value);
 
         return Mapper.Map<AccountDto>(account);
     }
@@ -23,18 +24,10 @@ public class AccountRepository(
     }
 
     public async Task LockAccountAsync(Guid userId)
-    {
-        await identityService.LockAccountAsync(userId);
-
-        await Context.SaveChangesAsync();
-    }
+        => await identityService.LockAccountAsync(userId);
 
     public async Task UnlockAccountAsync(Guid userId)
-    {
-        await identityService.UnlockAccountAsync(userId);
-
-        await Context.SaveChangesAsync();
-    }
+        => await identityService.UnlockAccountAsync(userId);
 
     public async Task<AccountDto> UpdateAccountInformationAsync(UpdateAccountInformationRequest request)
     {
@@ -43,6 +36,7 @@ public class AccountRepository(
         var account = await identityService.GetAccountAsync(Guid.Parse(user.Id!));
 
         Mapper.Map(request, account);
+        account.NormalizedUserName = account.UserName!.ToUpper();
 
         await Context.SaveChangesAsync();
         return Mapper.Map<AccountDto>(account);

@@ -21,7 +21,7 @@ public interface IAccountService
     /// The task result contains an <see cref="AccountDto"/> object.
     /// </returns>
     /// <exception cref="NotFoundException">Thrown when the account with the given ID is not found</exception>
-    Task<AccountDto> GetAccountAsync(Guid userId);
+    Task<AccountDto> GetAccountAsync(Guid? userId);
 
     /// <summary>
     /// Update the account information of the user
