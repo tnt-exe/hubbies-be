@@ -8,11 +8,9 @@ public class FeedbackRepository(IApplicationDbContext context, IMapper mapper, I
         await ValidateAsync(request);
 
         var feedback = Mapper.Map<Feedback>(request);
-
         feedback.UserId = Guid.Parse(user.Id!);
 
         await Context.Feedbacks.AddAsync(feedback);
-
         await Context.SaveChangesAsync();
 
         return Mapper.Map<FeedbackDto>(feedback);
@@ -22,7 +20,6 @@ public class FeedbackRepository(IApplicationDbContext context, IMapper mapper, I
     {
         var feedback = await Context.Feedbacks
             .Where(x => x.IsDeleted == false)
-            .Where(x => x.Status == FeedbackStatus.Approved)
             .FirstOrDefaultAsync(x => x.UserId == userId && x.TicketEventId == ticketEventId)
             ?? throw new NotFoundException(nameof(Feedback), new { UserId = userId, TicketEventId = ticketEventId });
 
@@ -37,6 +34,7 @@ public class FeedbackRepository(IApplicationDbContext context, IMapper mapper, I
 
         var feedback = await Context.Feedbacks
             .Where(x => x.IsDeleted == false)
+            .Where(x => x.Status == FeedbackStatus.Pending)
             .FirstOrDefaultAsync(x => x.UserId == approvalRequest.UserId
                                 && x.TicketEventId == approvalRequest.TicketEventId)
             ?? throw new NotFoundException(
@@ -53,7 +51,6 @@ public class FeedbackRepository(IApplicationDbContext context, IMapper mapper, I
         var feedback = await Context.Feedbacks
             .AsNoTracking()
             .Where(x => x.IsDeleted == false)
-            .Where(x => x.Status == FeedbackStatus.Approved)
             .FirstOrDefaultAsync(x => x.UserId == userId && x.TicketEventId == ticketEventId)
             ?? throw new NotFoundException(nameof(Feedback), new { UserId = userId, TicketEventId = ticketEventId });
 
@@ -67,7 +64,6 @@ public class FeedbackRepository(IApplicationDbContext context, IMapper mapper, I
         var feedbacks = await Context.Feedbacks
             .AsNoTracking()
             .Where(x => x.IsDeleted == false)
-            .Where(x => x.Status == FeedbackStatus.Approved)
             .Filter(queryParameter)
             .ToPaginationResponseAsync<Feedback, FeedbackDto>(queryParameter, Mapper);
 
@@ -82,7 +78,6 @@ public class FeedbackRepository(IApplicationDbContext context, IMapper mapper, I
 
         var feedback = await Context.Feedbacks
             .Where(x => x.IsDeleted == false)
-            .Where(x => x.Status == FeedbackStatus.Approved)
             .FirstOrDefaultAsync(x => x.UserId == userId && x.TicketEventId == ticketEventId)
             ?? throw new NotFoundException(nameof(Feedback), new { UserId = userId, TicketEventId = ticketEventId });
 

@@ -59,6 +59,8 @@ public interface ITicketEventService
     /// Ticket event approval
     /// </summary>
     /// <param name="approvalRequest"></param>
-    /// <exception cref="NotFoundException">Ticket event not found</exception>
+    /// <exception cref="NotFoundException">
+    /// Ticket event is deleted or not having 'Pending' status
+    /// </exception>
     Task TicketEventApprovalAsync(TicketEventApprovalRequest approvalRequest);
 }

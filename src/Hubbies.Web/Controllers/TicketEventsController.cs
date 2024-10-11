@@ -136,7 +136,7 @@ public class TicketEventsController(ITicketEventService ticketEventService)
     /// </summary>
     /// <param name="approvalRequest"></param>
     /// <response code="204">Ticket event approved</response>
-    /// <response code="404">Ticket event not found</response>
+    /// <response code="404">Ticket event is deleted or not 'Pending' status</response>
     [Authorize(Policy.Admin)]
     [HttpPut("approval", Name = "TicketEventApproval")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

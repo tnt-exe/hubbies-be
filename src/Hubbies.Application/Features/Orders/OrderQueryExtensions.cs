@@ -3,7 +3,11 @@ namespace Hubbies.Application.Features.Orders;
 public record OrderQueryParameter : PaginationQueryParameter
 {
     public Guid UserId { get; set; }
+
+    /// <example>HCM</example>
     public string? Address { get; set; }
+
+    /// <example>Pending</example>
     public OrderStatus? Status { get; set; }
 }
 

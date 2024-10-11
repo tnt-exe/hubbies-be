@@ -121,6 +121,7 @@ public class FeedbacksController(IFeedbackService feedbackService)
     /// </summary>
     /// <param name="approvalRequest"></param>
     /// <response code="204">Feedback approved</response>
+    /// <response code="404">Feedback either is deleted, or not having 'Pending' status</response>
     [Authorize(Policy.Admin)]
     [HttpPut("approval", Name = "FeedbackApproval")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

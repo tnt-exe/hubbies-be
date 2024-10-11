@@ -7,6 +7,9 @@ public record FeedbackQueryParameter : PaginationQueryParameter
 
     /// <example>5</example>
     public int? Rating { get; set; }
+
+    /// <example>Approved</example>
+    public FeedbackStatus? Status { get; init; }
 }
 
 public class FeedbackQueryParameterValidator : AbstractValidator<FeedbackQueryParameter>
@@ -37,6 +40,11 @@ public static class FeedbackQueryExtensions
         if (parameter.Rating > 0)
         {
             query = query.Where(x => x.Rating == parameter.Rating);
+        }
+
+        if (parameter.Status is not null)
+        {
+            query = query.Where(x => x.Status == parameter.Status);
         }
 
         return query;

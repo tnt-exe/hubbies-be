@@ -9,6 +9,7 @@ public class TicketEventRepository(IApplicationDbContext context, IMapper mapper
 
         var ticketEvent = await Context.TicketEvents
             .Where(x => x.IsDeleted == false)
+            .Where(x => x.ApprovalStatus == TicketApprovalStatus.Pending)
             .FirstOrDefaultAsync(x => x.Id == approvalRequest.TicketEventId)
             ?? throw new NotFoundException(nameof(TicketEvent), approvalRequest.TicketEventId);
 

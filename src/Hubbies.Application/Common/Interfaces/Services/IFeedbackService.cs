@@ -58,6 +58,8 @@ public interface IFeedbackService
     /// Feedback approval
     /// </summary>
     /// <param name="approvalRequest"></param>
-    /// <exception cref="NotFoundException">Feedback not found</exception>
+    /// <exception cref="NotFoundException">
+    /// Feedback is deleted or not found having 'Pending' status 
+    /// </exception>
     Task FeedbackApprovalAsync(FeedbackApprovalRequest approvalRequest);
 }

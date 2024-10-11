@@ -7,6 +7,9 @@ public record TicketEventQueryParameter : PaginationQueryParameter
 
     /// <example>Q9, HCM</example>
     public string? Address { get; init; }
+
+    /// <example>Approved</example>
+    public TicketApprovalStatus? ApprovalStatus { get; init; }
 }
 
 public record TicketEventIncludeParameter
@@ -38,6 +41,11 @@ public static class TicketEventQueryExtensions
         if (parameter.Address is not null)
         {
             query = query.Where(x => x.Address!.Contains(parameter.Address));
+        }
+
+        if (parameter.ApprovalStatus is not null)
+        {
+            query = query.Where(x => x.ApprovalStatus == parameter.ApprovalStatus);
         }
 
         return query;
