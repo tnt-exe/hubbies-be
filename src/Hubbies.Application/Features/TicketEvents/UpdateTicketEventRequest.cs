@@ -17,7 +17,6 @@ public record UpdateTicketEventRequest
     /// <example>Q9, HCM</example>
     public string? Address { get; init; }
 
-    /// <example>2024-10-29</example>
     public DateTimeOffset PostDate { get; init; }
 
     /// <example>https://monke-cofi.com/image.jpg</example>

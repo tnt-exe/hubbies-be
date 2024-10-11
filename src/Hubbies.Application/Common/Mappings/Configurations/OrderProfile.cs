@@ -10,7 +10,12 @@ public partial class MapperConfigure : Profile
         CreateMap<Order, OrderDto>().ReverseMap();
         CreateMap<Order, CreateOrderRequest>().ReverseMap();
 
-        CreateMap<OrderDetails, OrderDetailsDto>().ReverseMap();
-        CreateMap<OrderDetails, CreateOrderDetailsRequest>().ReverseMap();
+        CreateMap<OrderDetails, OrderDetailsDto>()
+            .ForMember(dest => dest.PreferredTime, opt => opt.MapFrom(src => src.PreferredTime.ToLocalTime()))
+            .ReverseMap();
+
+        CreateMap<OrderDetails, CreateOrderDetailsRequest>()
+            .ReverseMap()
+            .ForMember(dest => dest.PreferredTime, opt => opt.MapFrom(src => src.PreferredTime.ToUniversalTime()));
     }
 }

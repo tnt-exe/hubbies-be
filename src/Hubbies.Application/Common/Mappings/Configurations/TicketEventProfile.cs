@@ -6,8 +6,16 @@ public partial class MapperConfigure : Profile
 {
     void TicketEventProfile()
     {
-        CreateMap<TicketEvent, TicketEventDto>().ReverseMap();
-        CreateMap<TicketEvent, CreateTicketEventRequest>().ReverseMap();
-        CreateMap<TicketEvent, UpdateTicketEventRequest>().ReverseMap();
+        CreateMap<TicketEvent, TicketEventDto>()
+            .ForMember(dest => dest.PostDate, opt => opt.MapFrom(src => src.PostDate.ToLocalTime()))
+            .ReverseMap();
+
+        CreateMap<TicketEvent, CreateTicketEventRequest>()
+            .ReverseMap()
+            .ForMember(dest => dest.PostDate, opt => opt.MapFrom(src => src.PostDate.ToUniversalTime()));
+
+        CreateMap<TicketEvent, UpdateTicketEventRequest>()
+            .ReverseMap()
+            .ForMember(dest => dest.PostDate, opt => opt.MapFrom(src => src.PostDate.ToUniversalTime()));
     }
 }

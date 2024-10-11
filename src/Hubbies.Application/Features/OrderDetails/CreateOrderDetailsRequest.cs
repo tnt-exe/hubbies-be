@@ -7,7 +7,6 @@ public record CreateOrderDetailsRequest
     /// <example>HCM</example>
     public string? Location { get; init; }
 
-    /// <example>2024-10-29</example>
     public DateTimeOffset PreferredTime { get; init; }
 
     /// <example>5</example>
