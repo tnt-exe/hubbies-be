@@ -70,7 +70,7 @@ public class TicketEventsController(ITicketEventService ticketEventService)
     [Authorize(Policy.EventHost)]
     [HttpPost(Name = "CreateTicketEvent")]
     [ProducesResponseType(typeof(TicketEventDto), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> CreateTicketEventAsync(CreateTicketEventRequest request)
     {
         var response = await ticketEventService.CreateTicketEventAsync(request);
@@ -106,7 +106,7 @@ public class TicketEventsController(ITicketEventService ticketEventService)
     [HttpPut("{ticketEventId:guid}", Name = "UpdateTicketEvent")]
     [ProducesResponseType(typeof(TicketEventDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> UpdateTicketEventAsync(Guid ticketEventId, UpdateTicketEventRequest request)
     {
         var response = await ticketEventService.UpdateTicketEventAsync(ticketEventId, request);

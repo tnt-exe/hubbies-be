@@ -71,7 +71,7 @@ public class OrdersController(IOrderService orderService)
     [HttpPost(Name = "CreateOrder")]
     [ProducesResponseType(typeof(OrderDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> CreateOrderAsync(CreateOrderRequest request)
     {
         var response = await orderService.CreateOrderAsync(request);

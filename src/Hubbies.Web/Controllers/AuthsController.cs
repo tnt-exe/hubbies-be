@@ -31,7 +31,7 @@ public class AuthsController(IAuthService authService)
     [HttpPost("customer/register", Name = "CustomerRegister")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> RegisterCustomerAsync(RegisterRequest request)
     {
         await authService.RegisterCustomerAsync(request);
@@ -59,7 +59,7 @@ public class AuthsController(IAuthService authService)
     [HttpPost("event-host/register", Name = "EventHostRegister")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> RegisterEventHostAsync(RegisterRequest request)
     {
         await authService.RegisterEventHostAsync(request);
@@ -86,7 +86,7 @@ public class AuthsController(IAuthService authService)
     [HttpPost("login", Name = "Login")]
     [ProducesResponseType(typeof(AccessTokenResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> LoginAsync(LoginRequest request)
     {
         var response = await authService.LoginAsync(request);
@@ -113,7 +113,7 @@ public class AuthsController(IAuthService authService)
     /// <response code="422">The request is invalid</response>
     [HttpPost("token-login", Name = "TokenLogin")]
     [ProducesResponseType(typeof(AccessTokenResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> TokenLoginAsync(TokenLoginRequest request)
     {
         var response = await authService.TokenLoginAsync(request);
@@ -141,7 +141,7 @@ public class AuthsController(IAuthService authService)
     [HttpPost("refresh-token", Name = "RefreshToken")]
     [ProducesResponseType(typeof(AccessTokenResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> RefreshTokenAsync(RefreshRequest request)
     {
         var response = await authService.RefreshTokenAsync(request);
@@ -171,7 +171,7 @@ public class AuthsController(IAuthService authService)
     [HttpPut("change-password", Name = "ChangePassword")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> ChangePasswordAsync(ChangePasswordRequest request)
     {
         await authService.ChangePasswordAsync(request);
@@ -201,7 +201,7 @@ public class AuthsController(IAuthService authService)
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> CreatePasswordAsync(CreatePasswordRequest request)
     {
         await authService.CreatePasswordAsync(request);

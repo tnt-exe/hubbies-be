@@ -60,7 +60,7 @@ public class FeedbacksController(IFeedbackService feedbackService)
     [Authorize(Policy.Customer)]
     [HttpPost(Name = "CreateFeedback")]
     [ProducesResponseType(typeof(FeedbackDto), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> CreateFeedbackAsync(CreateFeedbackRequest request)
     {
         var response = await feedbackService.CreateFeedbackAsync(request);
@@ -90,7 +90,7 @@ public class FeedbacksController(IFeedbackService feedbackService)
     [HttpPut("ticket-event/{ticketEventId:guid}", Name = "UpdateFeedback")]
     [ProducesResponseType(typeof(FeedbackDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> UpdateFeedbackAsync(Guid ticketEventId, UpdateFeedbackRequest request)
     {
         var response = await feedbackService.UpdateFeedbackAsync(ticketEventId, request);

@@ -57,7 +57,7 @@ public class EventCategoriesController(IEventCategoryService eventCategoryServic
     [Authorize(Policy.Admin)]
     [HttpPost(Name = "CreateEventCategory")]
     [ProducesResponseType(typeof(EventCategoryDto), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> CreateEventCategoryAsync(CreateEventCategoryRequest request)
     {
         var response = await eventCategoryService.CreateEventCategoryAsync(request);
@@ -88,7 +88,7 @@ public class EventCategoriesController(IEventCategoryService eventCategoryServic
     [HttpPut("{eventCategoryId:guid}", Name = "UpdateEventCategory")]
     [ProducesResponseType(typeof(EventCategoryDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> UpdateEventCategoryAsync(Guid eventCategoryId, UpdateEventCategoryRequest request)
     {
         var response = await eventCategoryService.UpdateEventCategoryAsync(eventCategoryId, request);
