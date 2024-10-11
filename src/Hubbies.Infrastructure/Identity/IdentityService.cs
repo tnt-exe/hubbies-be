@@ -57,12 +57,12 @@ public class IdentityService : IIdentityService
         return (result.Succeeded, role.Id.ToString());
     }
 
-    public async Task<string> CreateUserAsync(string userName, string password, string role)
+    public async Task<string> CreateUserAsync(string email, string password, string role)
     {
         var user = new ApplicationUser
         {
-            UserName = userName,
-            Email = userName
+            UserName = email.Split('@')[0],
+            Email = email
         };
 
         var result = await _userManager.CreateAsync(user, password);
@@ -96,7 +96,7 @@ public class IdentityService : IIdentityService
         {
             await _userManager.CreateAsync(new ApplicationUser
             {
-                UserName = email,
+                UserName = email.Split('@')[0],
                 Email = email
             });
 

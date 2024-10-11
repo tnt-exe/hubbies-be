@@ -18,10 +18,10 @@ public interface IIdentityService
     Task<bool> IsInRoleAsync(string userId, string role);
 
     /// <summary>
-    /// Create a user with the given username and password
+    /// Create a user with the given email and password
     /// and assign the user to the role "Customer"
     /// </summary>
-    /// <param name="userName">Username of the user</param>
+    /// <param name="email">Email of the user</param>
     /// <param name="password">Password of the user</param>
     /// <param name="role">The role of the user</param>
     /// <returns>
@@ -31,7 +31,7 @@ public interface IIdentityService
     /// Be noted that the ID still created even if the user was not created successfully
     /// </remarks>
     /// <exception cref="ConflictException">Thrown when the user already exists</exception>
-    Task<string> CreateUserAsync(string userName, string password, string role);
+    Task<string> CreateUserAsync(string email, string password, string role);
 
     /// <summary>
     /// Create new role, in case the role already exists, return the role ID
