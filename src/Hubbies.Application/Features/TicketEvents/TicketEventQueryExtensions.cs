@@ -2,6 +2,8 @@ namespace Hubbies.Application.Features.TicketEvents;
 
 public record TicketEventQueryParameter : PaginationQueryParameter
 {
+    public Guid EventHostId { get; init; }
+
     /// <example>Cofi event</example>
     public string? Name { get; init; }
 
@@ -33,6 +35,11 @@ public static class TicketEventQueryExtensions
 {
     public static IQueryable<TicketEvent> Filter(this IQueryable<TicketEvent> query, TicketEventQueryParameter parameter)
     {
+        if (parameter.EventHostId != Guid.Empty)
+        {
+            query = query.Where(x => x.EventHostId == parameter.EventHostId);
+        }
+
         if (parameter.Name is not null)
         {
             query = query.Where(x => x.Name!.Contains(parameter.Name));
