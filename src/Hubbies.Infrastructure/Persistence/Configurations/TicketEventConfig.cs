@@ -17,6 +17,11 @@ public class TicketEventConfig : IEntityTypeConfiguration<TicketEvent>
             .HasForeignKey(x => x.EventCategoryId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.HasOne(x => x.EventHost)
+            .WithMany(x => x.TicketEvents)
+            .HasForeignKey(x => x.EventHostId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         builder.Property(x => x.Status)
             .HasConversion(
                 v => v.ToString(),

@@ -29,6 +29,7 @@ public record TicketEventDto
     /// <example>https://monke-cofi.com/image.jpg</example>
     public string? Image { get; init; }
     public Guid EventCategoryId { get; init; }
+    public Guid EventHostId { get; init; }
 
     public EventCategoryDto? EventCategory { get; init; }
     public IEnumerable<FeedbackDto> Feedbacks { get; init; } = default!;

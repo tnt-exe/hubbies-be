@@ -1,6 +1,6 @@
 namespace Hubbies.Application.Features.TicketEvents;
 
-public class TicketEventRepository(IApplicationDbContext context, IMapper mapper, IServiceProvider serviceProvider)
+public class TicketEventRepository(IApplicationDbContext context, IMapper mapper, IServiceProvider serviceProvider, IUser user)
     : BaseRepository(context, mapper, serviceProvider), ITicketEventService
 {
     public async Task TicketEventApprovalAsync(TicketEventApprovalRequest approvalRequest)
@@ -26,6 +26,7 @@ public class TicketEventRepository(IApplicationDbContext context, IMapper mapper
 
         ticketEvent.Status = TicketEventStatus.Available;
         ticketEvent.ApprovalStatus = TicketApprovalStatus.Pending;
+        ticketEvent.EventHostId = Guid.Parse(user.Id!);
 
         await Context.TicketEvents.AddAsync(ticketEvent);
 

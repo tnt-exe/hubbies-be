@@ -15,7 +15,9 @@ public class TicketEvent : BaseAuditableEntity, IBaseEntity
     public DateTimeOffset PostDate { get; set; }
     public string? Image { get; set; }
     public Guid EventCategoryId { get; set; }
+    public Guid EventHostId { get; set; }
 
     public EventCategory? EventCategory { get; set; }
+    public ApplicationUser? EventHost { get; set; }
     public ICollection<Feedback> Feedbacks { get; set; } = default!;
 }
