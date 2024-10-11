@@ -96,10 +96,12 @@ public class AccountsController(IAccountService accountService)
     /// </remarks>
     /// <param name="accountId"></param>
     /// <response code="204">The account was locked</response>
+    /// <response code="400">The account is already locked</response>
     /// <response code="404">The account was not found</response>
     [Authorize(Policy.Admin)]
     [HttpPut("{accountId:guid}/lock", Name = "LockAccount")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> LockAccountAsync(Guid accountId)
     {
@@ -116,10 +118,12 @@ public class AccountsController(IAccountService accountService)
     /// </remarks>
     /// <param name="accountId"></param>
     /// <response code="204">The account was unlocked</response>
+    /// <response code="404">The account is already unlocked or not locked</response>
     /// <response code="404">The account was not found</response>
     [Authorize(Policy.Admin)]
     [HttpPut("{accountId:guid}/unlock", Name = "UnlockAccount")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UnlockAccountAsync(Guid accountId)
     {
