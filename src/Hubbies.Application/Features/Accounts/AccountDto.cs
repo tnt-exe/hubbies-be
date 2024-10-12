@@ -4,7 +4,7 @@ public record AccountDto
 {
     public Guid Id { get; init; }
 
-    /// <example>blaccmonkerox</example>
+    /// <example>monke</example>
     public string? UserName { get; init; }
 
     /// <example>Monke</example>

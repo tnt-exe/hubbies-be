@@ -8,17 +8,19 @@ public interface IAuthService
     /// Register a new user
     /// </summary>
     /// <param name="request">The request to register</param>
+    /// <param name="role">The role of the user to register</param>
     /// <exception cref="ValidationException">Thrown when the request is invalid</exception>
     /// <exception cref="ConflictException">Thrown when the user is already registered</exception>
-    public Task RegisterCustomerAsync(RegisterRequest request);
+    public Task RegisterAsync(RegisterRequest request, RegisterRole role);
 
     /// <summary>
-    /// Register a new event host
+    /// Register a new user with full details form
     /// </summary>
     /// <param name="request">The request to register</param>
+    /// <param name="role">The role of the user to register</param>
     /// <exception cref="ValidationException">Thrown when the request is invalid</exception>
     /// <exception cref="ConflictException">Thrown when the user is already registered</exception>
-    public Task RegisterEventHostAsync(RegisterRequest request);
+    public Task RegisterWithFormAsync(RegisterFormRequest request, RegisterRole role);
 
     /// <summary>
     /// Login with pregiven token

@@ -1,4 +1,6 @@
-﻿namespace Hubbies.Application.Common.Interfaces.Data;
+﻿using Hubbies.Application.Features.Auths;
+
+namespace Hubbies.Application.Common.Interfaces.Data;
 
 public interface IIdentityService
 {
@@ -21,8 +23,7 @@ public interface IIdentityService
     /// Create a user with the given email and password
     /// and assign the user to the role "Customer"
     /// </summary>
-    /// <param name="email">Email of the user</param>
-    /// <param name="password">Password of the user</param>
+    /// <param name="request">The request to create the user</param>
     /// <param name="role">The role of the user</param>
     /// <returns>
     /// The user's ID if the user.
@@ -31,7 +32,21 @@ public interface IIdentityService
     /// Be noted that the ID still created even if the user was not created successfully
     /// </remarks>
     /// <exception cref="ConflictException">Thrown when the user already exists</exception>
-    Task<string> CreateUserAsync(string email, string password, string role);
+    Task<string> CreateUserAsync(RegisterRequest request, string role);
+
+    /// <summary>
+    /// Create a user with full details form
+    /// </summary>
+    /// <param name="request">The request to create the user</param>
+    /// <param name="role">The role of the user</param>
+    /// <returns>
+    /// The user's ID if the user.
+    /// </returns>
+    /// <remarks>
+    /// Be noted that the ID still created even if the user was not created successfully
+    /// </remarks>
+    /// <exception cref="ConflictException">Thrown when the user already exists</exception>
+    Task<string> CreateUserWithFormAsync(RegisterFormRequest request, string role);
 
     /// <summary>
     /// Create new role, in case the role already exists, return the role ID
@@ -47,8 +62,7 @@ public interface IIdentityService
     /// <summary>
     /// Login with the given email and password
     /// </summary>
-    /// <param name="email">The email of the user</param>
-    /// <param name="password">The password of the user</param>
+    /// <param name="request">Login request of email and password</param>
     /// <returns>
     /// A tuple containing:
     /// <para>Item1 (ApplicationUser): The user with the given email</para>
@@ -58,7 +72,7 @@ public interface IIdentityService
     /// Thrown when the email not found or password is incorrect
     /// Or the user is locked out
     /// </exception>
-    Task<(ApplicationUser user, string role)> LoginAsync(string email, string password);
+    Task<(ApplicationUser user, string role)> LoginAsync(LoginRequest request);
 
     /// <summary>
     /// Get the user with the given email, in case not found, create a new user with default role "Customer"

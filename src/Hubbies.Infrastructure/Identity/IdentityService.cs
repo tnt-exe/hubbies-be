@@ -1,4 +1,6 @@
-﻿namespace Hubbies.Infrastructure.Identity;
+﻿using Hubbies.Application.Features.Auths;
+
+namespace Hubbies.Infrastructure.Identity;
 
 public class IdentityService : IIdentityService
 {
@@ -57,12 +59,43 @@ public class IdentityService : IIdentityService
         return (result.Succeeded, role.Id.ToString());
     }
 
-    public async Task<string> CreateUserAsync(string email, string password, string role)
+    public async Task<string> CreateUserAsync(RegisterRequest request, string role)
     {
+        var email = request.Email!;
+        var password = request.Password!;
+
         var user = new ApplicationUser
         {
             UserName = email.Split('@')[0],
             Email = email
+        };
+
+        var result = await _userManager.CreateAsync(user, password);
+
+        if (!result.Succeeded)
+        {
+            throw new ConflictException(result.Errors);
+        }
+
+        await _userManager.AddToRoleAsync(user, role);
+
+        return user.Id.ToString();
+    }
+
+    public async Task<string> CreateUserWithFormAsync(RegisterFormRequest request, string role)
+    {
+        var email = request.Email!;
+        var password = request.Password!;
+
+        var user = new ApplicationUser
+        {
+            UserName = email.Split('@')[0],
+            Email = email,
+            FirstName = request.FirstName,
+            LastName = request.LastName,
+            PhoneNumber = request.PhoneNumber,
+            Address = request.Address,
+            Dob = request.Dob
         };
 
         var result = await _userManager.CreateAsync(user, password);
@@ -151,8 +184,11 @@ public class IdentityService : IIdentityService
         await _userManager.SetLockoutEndDateAsync(user!, lockoutDuration);
     }
 
-    public async Task<(ApplicationUser user, string role)> LoginAsync(string email, string password)
+    public async Task<(ApplicationUser user, string role)> LoginAsync(LoginRequest request)
     {
+        var email = request.Email!;
+        var password = request.Password!;
+
         var user = await _userManager.FindByEmailAsync(email)
             ?? throw new UnauthorizedAccessException($"Account with identifier '{email}' not found");
 

@@ -1,4 +1,5 @@
 ﻿using Hubbies.Application.Features.Auths;
+using Hubbies.Domain.Enums;
 using LoginRequest = Hubbies.Application.Features.Auths.LoginRequest;
 using RegisterRequest = Hubbies.Application.Features.Auths.RegisterRequest;
 
@@ -12,57 +13,68 @@ public class AuthsController(IAuthService authService)
     : ControllerBase
 {
     /// <summary>
-    /// Register a new customer
+    /// Register a new user
     /// </summary>
     /// <param name="request"></param>
+    /// <param name="role"></param>
     /// <remarks>
     /// Sample request:
     /// 
-    ///     POST /api/auths/customer/register
+    ///     POST /api/auths/register
     ///     {
     ///         "email": "monke@mail.com",
     ///         "password": "P@ssword7"
     ///     }
     ///     
     /// </remarks>
-    /// <response code="200">The customer was registered successfully</response>
-    /// <response code="409">The customer is already registered</response>
+    /// <response code="200">The user was registered successfully</response>
+    /// <response code="409">The user is already registered</response>
     /// <response code="422">The request is invalid</response>
-    [HttpPost("customer/register", Name = "CustomerRegister")]
+    [HttpPost("register", Name = "Register")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
-    public async Task<IActionResult> RegisterCustomerAsync(RegisterRequest request)
+    public async Task<IActionResult> RegisterAsync(
+        [FromQuery] RegisterRole role,
+        RegisterRequest request)
     {
-        await authService.RegisterCustomerAsync(request);
+        await authService.RegisterAsync(request, role);
 
         return Ok();
     }
 
     /// <summary>
-    /// Register a new event host
+    /// Register a new user with full details form
     /// </summary>
     /// <param name="request"></param>
+    /// <param name="role"></param>
     /// <remarks>
     /// Sample request:
-    /// 
-    ///     POST /api/auths/event-host/register
+    ///
+    ///     POST /api/auths/register/details
     ///     {
     ///         "email": "monke@mail.com",
-    ///         "password": "P@ssword7"
+    ///         "password": "P@ssword7",
+    ///         "firstName": "Monke",
+    ///         "lastName": "Black",
+    ///         "phoneNumber": "0942782980",
+    ///         "address": "Q9, HCM",
+    ///         "dob": "2002-09-25"
     ///     }
-    ///     
+    ///
     /// </remarks>
-    /// <response code="200">The event host was registered successfully</response>
-    /// <response code="409">The event host is already registered</response>
+    /// <response code="200">The user was registered successfully</response>
+    /// <response code="409">The user is already registered</response>
     /// <response code="422">The request is invalid</response>
-    [HttpPost("event-host/register", Name = "EventHostRegister")]
+    [HttpPost("register/details", Name = "RegisterDetailsForm")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
-    public async Task<IActionResult> RegisterEventHostAsync(RegisterRequest request)
+    public async Task<IActionResult> RegisterWithFormAsync(
+        [FromQuery] RegisterRole role,
+        RegisterFormRequest request)
     {
-        await authService.RegisterEventHostAsync(request);
+        await authService.RegisterWithFormAsync(request, role);
 
         return Ok();
     }
@@ -73,6 +85,8 @@ public class AuthsController(IAuthService authService)
     /// <param name="request"></param>
     /// <remarks>
     /// Sample request:
+    /// 
+    /// For every 5 failed login attempts, the user will be locked for 30 minutes
     /// 
     ///     POST /api/auths/login
     ///     {

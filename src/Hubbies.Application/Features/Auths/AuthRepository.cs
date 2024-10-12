@@ -1,6 +1,4 @@
-﻿using Hubbies.Domain.Constant;
-
-namespace Hubbies.Application.Features.Auths;
+﻿namespace Hubbies.Application.Features.Auths;
 
 public class AuthRepository(
     IApplicationDbContext context,
@@ -29,7 +27,7 @@ public class AuthRepository(
     {
         await ValidateAsync(request);
 
-        var authenticatedUser = await identityService.LoginAsync(request.Email!, request.Password!);
+        var authenticatedUser = await identityService.LoginAsync(request);
 
         var (accessToken, expired) = jwtService.GenerateJwtToken(authenticatedUser.user, authenticatedUser.role);
 
@@ -74,18 +72,18 @@ public class AuthRepository(
         };
     }
 
-    public async Task RegisterCustomerAsync(RegisterRequest request)
+    public async Task RegisterAsync(RegisterRequest request, RegisterRole role)
     {
         await ValidateAsync(request);
 
-        await identityService.CreateUserAsync(request.Email!, request.Password!, Role.Customer);
+        await identityService.CreateUserAsync(request, role.ToString());
     }
 
-    public async Task RegisterEventHostAsync(RegisterRequest request)
+    public async Task RegisterWithFormAsync(RegisterFormRequest request, RegisterRole role)
     {
         await ValidateAsync(request);
 
-        await identityService.CreateUserAsync(request.Email!, request.Password!, Role.EventHost);
+        await identityService.CreateUserWithFormAsync(request, role.ToString());
     }
 
     public async Task<AccessTokenResponse> TokenLoginAsync(TokenLoginRequest request)
