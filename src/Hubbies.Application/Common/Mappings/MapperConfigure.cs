@@ -9,5 +9,6 @@ public partial class MapperConfigure : Profile
         TicketEventProfile();
         FeedbackProfile();
         OrderProfile();
+        NotificationProfile();
     }
 }

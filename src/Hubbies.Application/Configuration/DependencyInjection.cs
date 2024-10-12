@@ -4,6 +4,7 @@ using Hubbies.Application.Features.EventCategories;
 using Hubbies.Application.Features.Feedbacks;
 using Hubbies.Application.Features.TicketEvents;
 using Hubbies.Application.Features.Orders;
+using Hubbies.Application.Features.Notifications;
 
 namespace Hubbies.Application.Configuration;
 
@@ -18,6 +19,7 @@ public static class DependencyInjection
         services.AddScoped<IFeedbackService, FeedbackRepository>();
         services.AddScoped<ITicketEventService, TicketEventRepository>();
         services.AddScoped<IOrderService, OrderRepository>();
+        services.AddScoped<INotificationService, NotificationRepository>();
 
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
 

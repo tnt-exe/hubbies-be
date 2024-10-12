@@ -11,4 +11,5 @@ public class ApplicationUser : IdentityUser<Guid>
     public ICollection<Order> Orders { get; set; } = default!;
     public ICollection<Feedback> Feedbacks { get; set; } = default!;
     public ICollection<TicketEvent> TicketEvents { get; set; } = default!;
+    public ICollection<Notification> Notifications { get; set; } = default!;
 }
