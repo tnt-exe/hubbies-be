@@ -13,7 +13,6 @@ public class OrderRepository(IApplicationDbContext context, IMapper mapper, ISer
         // validate if all ticket events are found
         var ticketEventIds = request.OrderDetails.Select(x => x.TicketEventId).ToList();
         var ticketEvents = await Context.TicketEvents
-            .AsNoTracking()
             .Where(x => x.IsDeleted == false)
             .Where(x => ticketEventIds.Contains(x.Id))
             .ToListAsync();
@@ -25,7 +24,20 @@ public class OrderRepository(IApplicationDbContext context, IMapper mapper, ISer
                 .Except(ticketEvents.Select(x => x.Id))
                 .ToList();
 
-            throw new NotFoundException(nameof(TicketEvent), notFoundIds);
+            throw new NotFoundException(nameof(TicketEvent), string.Join(", ", notFoundIds));
+        }
+
+        // check each ticket if quantity is enough
+        foreach (var item in request.OrderDetails)
+        {
+            var ticketEvent = ticketEvents
+                .Single(x => x.Id == item.TicketEventId);
+
+            if (ticketEvent.Quantity < item.Quantity)
+            {
+                throw new BadRequestException(
+                    $"Unsufficient quantity ({ticketEvent.Quantity} left) for ticket event {ticketEvent.Id}");
+            }
         }
 
         foreach (var item in request.OrderDetails)
@@ -35,6 +47,9 @@ public class OrderRepository(IApplicationDbContext context, IMapper mapper, ISer
 
             // calculate total price
             order.TotalPrice += ticketEvent.Price * item.Quantity;
+
+            // subtract quantity from ticket event
+            ticketEvent.Quantity -= item.Quantity;
 
             // append price to order details
             var orderDetail = order.OrderDetails
