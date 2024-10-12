@@ -36,7 +36,6 @@ public class AccountRepository(
         var account = await identityService.GetAccountAsync(Guid.Parse(user.Id!));
 
         Mapper.Map(request, account);
-        account.NormalizedUserName = account.UserName!.ToUpper();
 
         await Context.SaveChangesAsync();
         return Mapper.Map<AccountDto>(account);

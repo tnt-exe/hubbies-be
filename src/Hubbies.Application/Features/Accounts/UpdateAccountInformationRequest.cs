@@ -2,9 +2,6 @@ namespace Hubbies.Application.Features.Accounts;
 
 public record UpdateAccountInformationRequest
 {
-    /// <example>blaccmonkerox</example>
-    public string? UserName { get; init; }
-
     /// <example>Monke</example>
     public string? FirstName { get; init; }
 
@@ -26,16 +23,11 @@ public class UpdateAccountInformationRequestValidator : AbstractValidator<Update
 {
     public UpdateAccountInformationRequestValidator()
     {
-        RuleFor(x => x.UserName)
-            .MaximumLength(256)
-            .Must(x => !x.Contains(' '))
-            .WithMessage("Username must not contain any spaces");
-
         RuleFor(x => x.FirstName)
-            .MaximumLength(256);
+            .MaximumLength(50);
 
         RuleFor(x => x.LastName)
-            .MaximumLength(256);
+            .MaximumLength(50);
 
         RuleFor(x => x.Address)
             .MaximumLength(500);

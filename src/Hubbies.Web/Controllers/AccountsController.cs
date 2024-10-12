@@ -77,7 +77,6 @@ public class AccountsController(IAccountService accountService)
     /// 
     ///     PUT /api/accounts
     ///     {
-    ///         "userName": "blaccmonkerox",
     ///         "firstName": "Monke",
     ///         "lastName": "Black",
     ///         "address": "Q9, HCM",
