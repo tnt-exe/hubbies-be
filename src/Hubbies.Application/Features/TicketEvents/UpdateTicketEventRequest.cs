@@ -5,8 +5,11 @@ public record UpdateTicketEventRequest
     /// <example>Cofi event</example>
     public string? Name { get; init; }
 
-    /// <example>Event full of monkes doing art</example>
+    /// <example>Monkes doing art</example>
     public string? Description { get; init; }
+
+    /// <example>Event full of monkes doing art and many more...</example>
+    public string? Content { get; init; }
 
     /// <example>50</example>
     public int Quantity { get; init; }
@@ -35,6 +38,9 @@ public class UpdateTicketEventRequestValidator : AbstractValidator<UpdateTicketE
         RuleFor(x => x.Description)
             .NotEmpty()
             .MaximumLength(500);
+
+        RuleFor(x => x.Content)
+            .MaximumLength(10000);
 
         RuleFor(x => x.Quantity)
             .GreaterThan(0);

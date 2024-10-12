@@ -10,8 +10,11 @@ public record TicketEventDto
     /// <example>Cofi event</example>
     public string? Name { get; init; }
 
-    /// <example>Event full of monkes doing art</example>
+    /// <example>Monkes doing art</example>
     public string? Description { get; init; }
+
+    /// <example>Event full of monkes doing art and many more...</example>
+    public string? Content { get; init; }
 
     /// <example>50</example>
     public int Quantity { get; init; }

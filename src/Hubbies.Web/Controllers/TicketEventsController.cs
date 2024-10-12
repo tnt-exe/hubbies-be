@@ -56,6 +56,7 @@ public class TicketEventsController(ITicketEventService ticketEventService)
     ///     {
     ///         "name": "Cofi",
     ///         "description": "Cofi description",
+    ///         "content": "Cofi content of 10000 characters...",
     ///         "quantity": 100,
     ///         "price": 100000,
     ///         "address": "HCM",
@@ -90,6 +91,7 @@ public class TicketEventsController(ITicketEventService ticketEventService)
     ///     {
     ///         "name": "Cofi",
     ///         "description": "Cofi description",
+    ///         "content": "Cofi content of 10000 characters...",
     ///         "quantity": 100,
     ///         "price": 100000,
     ///         "address": "HCM",
