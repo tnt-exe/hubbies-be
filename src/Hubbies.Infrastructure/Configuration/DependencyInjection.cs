@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Hubbies.Infrastructure.Auth;
+﻿using Hubbies.Infrastructure.Auth;
 using Hubbies.Infrastructure.Identity;
 using Hubbies.Infrastructure.Persistence;
 using Hubbies.Infrastructure.Persistence.Interceptors;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Hubbies.Infrastructure.Configuration;
 

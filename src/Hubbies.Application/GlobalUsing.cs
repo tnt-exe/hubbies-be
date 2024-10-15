@@ -1,7 +1,5 @@
 ﻿global using AutoMapper;
 global using FluentValidation;
-global using Microsoft.EntityFrameworkCore;
-global using Microsoft.Extensions.DependencyInjection;
 global using Hubbies.Application.Common.Exceptions;
 global using Hubbies.Application.Common.Interfaces.Auth;
 global using Hubbies.Application.Common.Interfaces.Data;
@@ -12,6 +10,8 @@ global using Hubbies.Domain.Common;
 global using Hubbies.Domain.Enums;
 global using Hubbies.Domain.Identity;
 global using Hubbies.Domain.Models;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.DependencyInjection;
 global using System.Data;
 global using System.Net;
 global using System.Reflection;

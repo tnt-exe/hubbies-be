@@ -2,9 +2,9 @@
 using Hubbies.Application.Features.Auths;
 using Hubbies.Application.Features.EventCategories;
 using Hubbies.Application.Features.Feedbacks;
-using Hubbies.Application.Features.TicketEvents;
-using Hubbies.Application.Features.Orders;
 using Hubbies.Application.Features.Notifications;
+using Hubbies.Application.Features.Orders;
+using Hubbies.Application.Features.TicketEvents;
 
 namespace Hubbies.Application.Configuration;
 
