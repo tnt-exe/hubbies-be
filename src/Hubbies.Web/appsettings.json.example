@@ -27,6 +27,15 @@
       "ReplenishmentPeriod": 60
     }
   },
+  "ZaloPay": {
+  "AppId": "AppId",
+  "AppUser": "AppUser",
+  "Key1": "Key1",
+  "Key2": "Key2",
+  "PaymentUrl": "PaymentUrl",
+  "CallbackUrl": "CallbackUrl",
+  "RedirectUrl": "RedirectUrl"
+  },
   "SwaggerServers": [
     {
       "Url": "Server Url",

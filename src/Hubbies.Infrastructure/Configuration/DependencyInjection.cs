@@ -1,5 +1,7 @@
-﻿using Hubbies.Infrastructure.Auth;
+﻿using Hubbies.Application.Payments.ZaloPay;
+using Hubbies.Infrastructure.Auth;
 using Hubbies.Infrastructure.Identity;
+using Hubbies.Infrastructure.PaymentService.ZaloPay;
 using Hubbies.Infrastructure.Persistence;
 using Hubbies.Infrastructure.Persistence.Interceptors;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -55,6 +57,9 @@ public static class DependencyInjection
                 name: "Hubbies Database",
                 failureStatus: HealthStatus.Unhealthy,
                 tags: ["db", "sql", "postgre"]);
+
+        services.Configure<ZaloPayConfiguration>(configuration.GetSection("ZaloPay"));
+        services.AddScoped<IZaloPayService, ZaloPayService>();
 
         return services;
     }
