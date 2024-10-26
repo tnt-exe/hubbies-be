@@ -8,5 +8,6 @@ public class ZaloPayConfiguration
     public string? Key2 { get; set; }
     public string? PaymentUrl { get; set; }
     public string? CallbackUrl { get; set; }
+    public string? QueryUrl { get; set; }
     public string? RedirectUrl { get; set; }
 }

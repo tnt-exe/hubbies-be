@@ -63,7 +63,7 @@ public class ZaloPayService(IOptions<ZaloPayConfiguration> configuration)
     {
         var appId = _configuration.AppId!;
         var key1 = _configuration.Key1!;
-        var queryUrl = _configuration.CallbackUrl!;
+        var queryUrl = _configuration.QueryUrl!;
 
         var queryParams = new Dictionary<string, string>
         {

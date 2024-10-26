@@ -34,6 +34,7 @@
   "Key2": "Key2",
   "PaymentUrl": "PaymentUrl",
   "CallbackUrl": "CallbackUrl",
+  "QueryUrl": "QueryUrl",
   "RedirectUrl": "RedirectUrl"
   },
   "SwaggerServers": [
