@@ -9,7 +9,7 @@ public class ZaloPayService(IOptions<ZaloPayConfiguration> configuration)
 {
     private readonly ZaloPayConfiguration _configuration = configuration.Value;
 
-    public async Task<(string? paymentUrl, string appTransId)> GetPaymentUrl(
+    public async Task<(string? paymentUrl, string appTransId)> GetPaymentUrlAsync(
         long amount,
         string description)
     {
@@ -59,7 +59,7 @@ public class ZaloPayService(IOptions<ZaloPayConfiguration> configuration)
         return (null, appTransId);
     }
 
-    public async Task<OrderStatus> VerifyPayment(string appTransId)
+    public async Task<OrderStatus> VerifyPaymentAsync(string appTransId)
     {
         var appId = _configuration.AppId!;
         var key1 = _configuration.Key1!;

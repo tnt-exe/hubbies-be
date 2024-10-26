@@ -11,14 +11,14 @@ public interface IZaloPayService
     /// paymentUrl: ZaloPay payment url
     /// appTransId: ZaloPay transaction id, use as reference when verify payment
     /// </returns>
-    Task<(string? paymentUrl, string appTransId)> GetPaymentUrl(long amount, string description);
+    Task<(string? paymentUrl, string appTransId)> GetPaymentUrlAsync(long amount, string description);
 
     /// <summary>
     /// Verify payment status
     /// </summary>
     /// <param name="appTransId">ZaloPay transaction id</param>
     /// <returns>Order status</returns>
-    Task<OrderStatus> VerifyPayment(string appTransId);
+    Task<OrderStatus> VerifyPaymentAsync(string appTransId);
 
     /// <summary>
     /// Callback payment

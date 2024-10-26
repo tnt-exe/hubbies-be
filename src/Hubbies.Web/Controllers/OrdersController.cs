@@ -91,9 +91,9 @@ public class OrdersController(IOrderService orderService)
     [HttpPost("order-status", Name = "CheckOrderStatus")]
     [ProducesResponseType(typeof(OrderStatusDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> CheckOrderStatus([FromQuery] string paymentReference)
+    public async Task<IActionResult> CheckOrderStatusAsync([FromQuery] string paymentReference)
     {
-        var result = await orderService.CheckOrderStatus(paymentReference, "ZaloPay");
+        var result = await orderService.CheckOrderStatusAsync(paymentReference, "ZaloPay");
 
         return Ok(result);
     }

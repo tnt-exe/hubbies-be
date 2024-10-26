@@ -80,7 +80,7 @@ public class OrderRepository(
         var orderDescription = $"Thanh toán đơn hàng {order.Id}";
         if (request.PaymentType == PaymentType.ZaloPay)
         {
-            (string? paymentUrl, string appTransId) = await zaloPayService.GetPaymentUrl((long)order.TotalPrice, orderDescription);
+            (string? paymentUrl, string appTransId) = await zaloPayService.GetPaymentUrlAsync((long)order.TotalPrice, orderDescription);
 
             if (paymentUrl is null)
             {
@@ -136,7 +136,7 @@ public class OrderRepository(
         return orders;
     }
 
-    public async Task<OrderStatusDto> CheckOrderStatus(string paymentReference, string paymentType)
+    public async Task<OrderStatusDto> CheckOrderStatusAsync(string paymentReference, string paymentType)
     {
         var payment = await Context.Payments
             .FirstOrDefaultAsync(x => x.PaymentReference == paymentReference)
@@ -153,7 +153,7 @@ public class OrderRepository(
         OrderStatus orderStatus;
         if (paymentType == PaymentType.ZaloPay.ToString())
         {
-            orderStatus = await zaloPayService.VerifyPayment(paymentReference);
+            orderStatus = await zaloPayService.VerifyPaymentAsync(paymentReference);
         }
         else
         {

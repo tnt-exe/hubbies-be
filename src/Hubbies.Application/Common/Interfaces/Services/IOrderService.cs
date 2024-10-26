@@ -47,5 +47,5 @@ public interface IOrderService
     /// The task result contains an <see cref="OrderStatusDto"/> object.
     /// </returns>
     /// <exception cref="NotFoundException">Payment or order not found</exception>
-    Task<OrderStatusDto> CheckOrderStatus(string paymentReference, string paymentType);
+    Task<OrderStatusDto> CheckOrderStatusAsync(string paymentReference, string paymentType);
 }
