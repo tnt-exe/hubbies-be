@@ -16,6 +16,7 @@ public class GlobalExceptionHandler(IProblemDetailsService problemDetailsService
         {
             HttpException httpException => (int)httpException.StatusCode,
             UnauthorizedAccessException _ => StatusCodes.Status401Unauthorized,
+            NotImplementedException _ => StatusCodes.Status501NotImplemented,
             _ => StatusCodes.Status500InternalServerError
         };
 
