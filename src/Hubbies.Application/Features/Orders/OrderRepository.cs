@@ -176,9 +176,10 @@ public class OrderRepository(
             return new Notification()
             {
                 UserId = userId,
-                Title = $"Đơn hàng đã hoàn thành #{DateTimeOffset.Now.ToLocalTime()}",
-                Content = $"Đơn hàng {orderId} đã được thanh toán thành công",
-                From = "System"
+                Title = "Đơn hàng đã hoàn thành",
+                Content = $"Đơn hàng với id {orderId} đã được thanh toán thành công",
+                From = "System",
+                SentAt = DateTimeOffset.Now.ToUniversalTime()
             };
         }
 

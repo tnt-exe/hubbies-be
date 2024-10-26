@@ -7,6 +7,7 @@ public class Notification : IBaseEntity, ISoftDelete
     public string? Content { get; set; }
     public bool IsRead { get; set; }
     public string? From { get; set; }
+    public DateTimeOffset? SentAt { get; set; }
     public bool IsDeleted { get; set; }
     public DateTimeOffset? DeletedAt { get; set; }
 

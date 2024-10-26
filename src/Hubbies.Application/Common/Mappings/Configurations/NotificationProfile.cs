@@ -6,6 +6,8 @@ public partial class MapperConfigure : Profile
 {
     void NotificationProfile()
     {
-        CreateMap<Notification, NotificationDto>().ReverseMap();
+        CreateMap<Notification, NotificationDto>()
+            .ForMember(dest => dest.SentAt, opt => opt.MapFrom(src => src.SentAt!.Value.ToLocalTime()))
+            .ReverseMap();
     }
 }

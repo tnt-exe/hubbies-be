@@ -13,4 +13,6 @@ public record NotificationDto
 
     /// <example>Monke Admin</example>
     public string? From { get; init; }
+
+    public DateTimeOffset? SentAt { get; init; }
 }
