@@ -1,9 +1,17 @@
+using Hubbies.Application.Payments;
+using Hubbies.Application.Payments.ZaloPay;
+
 namespace Hubbies.Application.Features.Orders;
 
-public class OrderRepository(IApplicationDbContext context, IMapper mapper, IServiceProvider serviceProvider, IUser user)
+public class OrderRepository(
+    IApplicationDbContext context,
+    IMapper mapper,
+    IServiceProvider serviceProvider,
+    IUser user,
+    IZaloPayService zaloPayService)
     : BaseRepository(context, mapper, serviceProvider), IOrderService
 {
-    public async Task<OrderDto> CreateOrderAsync(CreateOrderRequest request)
+    public async Task<OrderPaymentResponse> CreateOrderAsync(CreateOrderRequest request)
     {
         await ValidateAsync(request);
 
@@ -61,9 +69,46 @@ public class OrderRepository(IApplicationDbContext context, IMapper mapper, ISer
         order.Status = OrderStatus.Pending;
 
         await Context.Orders.AddAsync(order);
+
+        var paymentReference = new Payment()
+        {
+            OrderId = order.Id
+        };
+
+        string? orderPaymentUrl;
+        string? orderPaymentReference;
+        var orderDescription = $"Thanh toán đơn hàng {order.Id}";
+        if (request.PaymentType == PaymentType.ZaloPay)
+        {
+            (string? paymentUrl, string appTransId) = await zaloPayService.GetPaymentUrl((long)order.TotalPrice, orderDescription);
+
+            if (paymentUrl is null)
+            {
+                throw new BadRequestException("Failed to create payment url");
+            }
+
+            paymentReference.PaymentReference = appTransId;
+            paymentReference.PaymentType = PaymentType.ZaloPay.ToString();
+
+            orderPaymentUrl = paymentUrl;
+            orderPaymentReference = appTransId;
+        }
+        else
+        {
+            //todo: add other payments, or forget about it
+            orderPaymentReference = "";
+            orderPaymentUrl = "";
+        }
+
+        await Context.Payments.AddAsync(paymentReference);
+
         await Context.SaveChangesAsync();
 
-        return Mapper.Map<OrderDto>(order);
+        return new OrderPaymentResponse()
+        {
+            PaymentUrl = orderPaymentUrl,
+            PaymentReference = orderPaymentReference
+        };
     }
 
     public async Task<OrderDto> GetOrderAsync(Guid id, OrderIncludeParameter includeParameter)
@@ -91,16 +136,77 @@ public class OrderRepository(IApplicationDbContext context, IMapper mapper, ISer
         return orders;
     }
 
-    public async Task OrderStatusChangeAsync(OrderStatusChangeRequest orderStatus)
+    public async Task<OrderStatusDto> CheckOrderStatus(string paymentReference, string paymentType)
     {
-        await ValidateAsync(orderStatus);
+        var payment = await Context.Payments
+            .FirstOrDefaultAsync(x => x.PaymentReference == paymentReference)
+            ?? throw new NotFoundException(nameof(Payment), paymentReference);
 
         var order = await Context.Orders
-            .FirstOrDefaultAsync(x => x.Id == orderStatus.OrderId)
-            ?? throw new NotFoundException(nameof(Order), orderStatus.OrderId);
+            .Include(x => x.OrderDetails)
+            .ThenInclude(x => x.TicketEvent)
+            .ThenInclude(x => x!.EventHost)
+            .AsSplitQuery()
+            .FirstOrDefaultAsync(x => x.Id == payment.OrderId)
+            ?? throw new NotFoundException(nameof(Order), payment.OrderId);
 
-        order.Status = orderStatus.Status;
+        OrderStatus orderStatus;
+        if (paymentType == PaymentType.ZaloPay.ToString())
+        {
+            orderStatus = await zaloPayService.VerifyPayment(paymentReference);
+        }
+        else
+        {
+            orderStatus = OrderStatus.Canceled;
+        }
+
+        order.Status = orderStatus;
+
+        if (orderStatus != OrderStatus.Finished)
+        {
+            return new OrderStatusDto()
+            {
+                OrderId = order.Id,
+                Status = order.Status
+            };
+        }
+
+        static Notification CreateNotification(Guid userId, string orderId)
+        {
+            return new Notification()
+            {
+                UserId = userId,
+                Title = $"Đơn hàng đã hoàn thành #{DateTimeOffset.Now.ToLocalTime()}",
+                Content = $"Đơn hàng {orderId} đã được thanh toán thành công",
+                From = "System"
+            };
+        }
+
+        var adminId = Guid.Parse("c71da9be-4110-4452-89b8-2982c76efc1f");
+
+        var userNotification = CreateNotification(order.UserId, order.Id.ToString());
+        var adminNotification = CreateNotification(adminId, order.Id.ToString());
+        List<Notification> eventHostNotifications = [];
+
+        userNotification.UserId = order.UserId;
+        adminNotification.UserId = adminId;
+
+        foreach (var eventHost in order.OrderDetails.Select(x => x.TicketEvent!.EventHost))
+        {
+            var eventHostNotification = CreateNotification(eventHost!.Id, order.Id.ToString());
+            eventHostNotification.UserId = eventHost!.Id;
+            eventHostNotifications.Add(eventHostNotification);
+        }
+
+        await Context.Notifications.AddRangeAsync([userNotification, adminNotification]);
+        await Context.Notifications.AddRangeAsync(eventHostNotifications);
 
         await Context.SaveChangesAsync();
+
+        return new OrderStatusDto()
+        {
+            OrderId = order.Id,
+            Status = order.Status
+        };
     }
 }

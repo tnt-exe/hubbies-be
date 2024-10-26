@@ -1,4 +1,5 @@
 using Hubbies.Application.Features.OrderDetails;
+using Hubbies.Application.Payments;
 
 namespace Hubbies.Application.Features.Orders;
 
@@ -8,6 +9,8 @@ public record CreateOrderRequest
     public string? Address { get; init; }
 
     public IEnumerable<CreateOrderDetailsRequest> OrderDetails { get; init; } = default!;
+
+    public PaymentType PaymentType { get; init; }
 }
 
 public class CreateOrderRequestValidator : AbstractValidator<CreateOrderRequest>
@@ -19,5 +22,8 @@ public class CreateOrderRequestValidator : AbstractValidator<CreateOrderRequest>
 
         RuleFor(x => x.OrderDetails)
             .ForEach(x => x.SetValidator(new CreateOrderDetailsRequestValidator()));
+
+        RuleFor(x => x.PaymentType)
+            .IsInEnum();
     }
 }

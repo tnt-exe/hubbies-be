@@ -31,16 +31,21 @@ public interface IOrderService
     /// </summary>
     /// <param name="request"></param>
     /// <returns>
-    /// The task result contains an <see cref="OrderDto"/> object.
+    /// The task result contains an <see cref="OrderPaymentResponse"/> object.
     /// </returns>
     /// <exception cref="ValidationException">Validation error</exception>
+    /// <exception cref="BadRequestException">Failed to create order for various reasons</exception>
     /// <exception cref="NotFoundException">Ticket event not found</exception>
-    Task<OrderDto> CreateOrderAsync(CreateOrderRequest request);
+    Task<OrderPaymentResponse> CreateOrderAsync(CreateOrderRequest request);
 
     /// <summary>
-    /// Update order status
+    /// Check order status
     /// </summary>
-    /// <param name="orderStatus"></param>
-    /// <exception cref="NotFoundException">Order not found</exception>
-    Task OrderStatusChangeAsync(OrderStatusChangeRequest orderStatus);
+    /// <param name="paymentReference"></param>
+    /// <param name="paymentType"></param>
+    /// <returns>
+    /// The task result contains an <see cref="OrderStatusDto"/> object.
+    /// </returns>
+    /// <exception cref="NotFoundException">Payment or order not found</exception>
+    Task<OrderStatusDto> CheckOrderStatus(string paymentReference, string paymentType);
 }

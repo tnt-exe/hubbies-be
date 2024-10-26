@@ -60,39 +60,41 @@ public class OrdersController(IOrderService orderService)
     ///                 "preferredTime": "2024-09-29",
     ///                 "quantity": 1
     ///             }
-    ///         ]
+    ///         ],
+    ///         "paymentType": "ZaloPay"
     ///      }
     ///     
     /// </remarks>
-    /// <response code="201">Order created</response>
+    /// <response code="200">Order payment url</response>
+    /// <response code="400">Failed to create order for various reasons</response>
     /// <response code="404">Ticket event not found</response>
     /// <response code="422">Unprocessable entity</response>
     [Authorize(Policy.Customer)]
     [HttpPost(Name = "CreateOrder")]
-    [ProducesResponseType(typeof(OrderDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(OrderPaymentResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> CreateOrderAsync(CreateOrderRequest request)
     {
         var response = await orderService.CreateOrderAsync(request);
 
-        return CreatedAtRoute("GetOrder", new { orderId = response.Id }, response);
+        return Ok(response);
     }
 
     /// <summary>
-    /// Update order status
+    /// After payment process, call this API to check order status
     /// </summary>
-    /// <param name="orderStatus"></param>
-    /// <response code="204">Order status updated</response>
-    /// <response code="404">Order not found</response>
-    [Authorize]
-    [HttpPut("status", Name = "UpdateOrderStatus")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    /// <param name="paymentReference"></param>
+    /// <response code="200">Returns order status</response>
+    /// <response code="404">Payment or order not found</response>
+    [HttpPost("order-status", Name = "CheckOrderStatus")]
+    [ProducesResponseType(typeof(OrderStatusDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateOrderStatusAsync([FromQuery] OrderStatusChangeRequest orderStatus)
+    public async Task<IActionResult> CheckOrderStatus([FromQuery] string paymentReference)
     {
-        await orderService.OrderStatusChangeAsync(orderStatus);
+        var result = await orderService.CheckOrderStatus(paymentReference, "ZaloPay");
 
-        return NoContent();
+        return Ok(result);
     }
 }
