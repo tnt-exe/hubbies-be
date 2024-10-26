@@ -12,4 +12,5 @@ public class Order : BaseAuditableEntity, IBaseEntity
 
     public ApplicationUser? User { get; set; }
     public ICollection<OrderDetails> OrderDetails { get; set; } = default!;
+    public ICollection<Payment> Payments { get; set; } = default!;
 }
