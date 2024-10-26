@@ -15,9 +15,9 @@ public class PaymentsController(
     /// </summary>
     /// <param name="callbackData"></param>
     [HttpPost("zalopay/callback", Name = "ZaloPayCallback")]
-    public async Task<IActionResult> ZaloPayCallback([FromBody] dynamic callbackData)
+    public IActionResult ZaloPayCallback([FromBody] dynamic callbackData)
     {
-        var result = await zaloPayService.CallbackPayment(callbackData);
+        var result = zaloPayService.CallbackPayment(callbackData);
         return Ok(result);
     }
 }

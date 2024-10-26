@@ -1,6 +1,7 @@
 using Hubbies.Application.Payments.ZaloPay;
 using Hubbies.Infrastructure.Utils;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Hubbies.Infrastructure.PaymentService.ZaloPay;
 
@@ -101,8 +102,10 @@ public class ZaloPayService(IOptions<ZaloPayConfiguration> configuration)
 
         var key2 = _configuration.Key2!;
 
-        var data = Convert.ToString(callbackData["data"]);
-        var dataMac = Convert.ToString(callbackData["mac"]);
+        JObject callbackDataObj = JObject.Parse(callbackData.ToString());
+
+        var data = callbackDataObj["data"]!.ToString();
+        var dataMac = callbackDataObj["mac"]!.ToString();
 
         var mac = HashHelper.HmacSHA256(data, key2);
 
