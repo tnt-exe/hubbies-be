@@ -1,6 +1,7 @@
 using Hubbies.Application.Payments;
 using Hubbies.Application.Payments.PayOS;
 using Hubbies.Application.Payments.ZaloPay;
+using Microsoft.Extensions.Configuration;
 
 namespace Hubbies.Application.Features.Orders;
 
@@ -9,6 +10,7 @@ public class OrderRepository(
     IMapper mapper,
     IServiceProvider serviceProvider,
     IUser user,
+    IConfiguration configuration,
     IZaloPayService zaloPayService,
     IPayOSService payOSService)
     : BaseRepository(context, mapper, serviceProvider), IOrderService
@@ -197,7 +199,7 @@ public class OrderRepository(
                 };
             }
 
-            var adminId = Guid.Parse("c71da9be-4110-4452-89b8-2982c76efc1f");
+            var adminId = Guid.Parse(configuration["AdminId"]!);
 
             var userNotification = CreateNotification(order.UserId, order.Id.ToString());
             var adminNotification = CreateNotification(adminId, order.Id.ToString());
