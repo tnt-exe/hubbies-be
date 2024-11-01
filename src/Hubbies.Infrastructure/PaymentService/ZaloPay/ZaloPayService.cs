@@ -1,3 +1,4 @@
+using Hubbies.Application.Payments;
 using Hubbies.Application.Payments.ZaloPay;
 using Hubbies.Infrastructure.Utils;
 using Newtonsoft.Json;
@@ -14,11 +15,13 @@ public class ZaloPayService(IOptions<ZaloPayConfiguration> configuration)
         long amount,
         string description)
     {
+        var provider = "?provider=" + PaymentType.ZaloPay;
+
         var appId = _configuration.AppId!;
         var appUser = _configuration.AppUser!;
         var paymentUrl = _configuration.PaymentUrl!;
         var callbackUrl = _configuration.CallbackUrl!;
-        var redirectUrl = _configuration.RedirectUrl!;
+        var redirectUrl = _configuration.RedirectUrl! + provider;
         var key1 = _configuration.Key1!;
 
         var embedData = new { redirecturl = redirectUrl };

@@ -1,4 +1,5 @@
 using Hubbies.Application.Features.Orders;
+using Hubbies.Application.Payments;
 
 namespace Hubbies.Web.Controllers;
 
@@ -86,14 +87,17 @@ public class OrdersController(IOrderService orderService)
     /// After payment process, call this API to check order status
     /// </summary>
     /// <param name="paymentReference"></param>
+    /// <param name="paymentType"></param>
     /// <response code="200">Returns order status</response>
     /// <response code="404">Payment or order not found</response>
     [HttpPost("order-status", Name = "CheckOrderStatus")]
     [ProducesResponseType(typeof(OrderStatusDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> CheckOrderStatusAsync([FromQuery] string paymentReference)
+    public async Task<IActionResult> CheckOrderStatusAsync(
+        [FromQuery] string paymentReference,
+        [FromQuery] PaymentType paymentType)
     {
-        var result = await orderService.CheckOrderStatusAsync(paymentReference, "PayOS");
+        var result = await orderService.CheckOrderStatusAsync(paymentReference, paymentType.ToString());
 
         return Ok(result);
     }

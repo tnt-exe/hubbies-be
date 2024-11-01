@@ -1,3 +1,4 @@
+using Hubbies.Application.Payments;
 using Hubbies.Application.Payments.PayOS;
 using Net.payOS;
 using Net.payOS.Types;
@@ -11,13 +12,15 @@ public class PayOSService(IOptions<PayOSConfiguration> configuration, PayOS payO
 
     public async Task<(string? paymentUrl, string paymentReference)> GetPaymentUrlAsync(long amount, string description)
     {
+        var provider = "?provider=" + PaymentType.PayOS;
+
         var paymentData = new PaymentData(
             orderCode: new Random().Next(100000000, 999999999),
             amount: (int)amount,
             description: description,
             items: [],
-            cancelUrl: _configuration.CancelUrl!,
-            returnUrl: _configuration.ReturnUrl!
+            cancelUrl: _configuration.CancelUrl! + provider,
+            returnUrl: _configuration.ReturnUrl! + provider
         );
 
         var createPaymentResult = await payOS.createPaymentLink(paymentData);
@@ -35,7 +38,7 @@ public class PayOSService(IOptions<PayOSConfiguration> configuration, PayOS payO
         {
             "PAID" => OrderStatus.Finished,
             "PENDING" => OrderStatus.Pending,
-            "CANCELED" => OrderStatus.Canceled,
+            "CANCELLED" => OrderStatus.Canceled,
             _ => OrderStatus.Canceled
         };
     }
