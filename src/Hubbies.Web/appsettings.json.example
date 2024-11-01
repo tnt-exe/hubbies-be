@@ -37,6 +37,13 @@
   "QueryUrl": "QueryUrl",
   "RedirectUrl": "RedirectUrl"
   },
+  "PayOS": {
+    "ClientId": "ClientId",
+    "ApiKey": "ApiKey",
+    "ChecksumKey": "ChecksumKey",
+    "CancelUrl": "CancelUrl",
+    "ReturnUrl": "ReturnUrl"
+  },
   "SwaggerServers": [
     {
       "Url": "Server Url",
