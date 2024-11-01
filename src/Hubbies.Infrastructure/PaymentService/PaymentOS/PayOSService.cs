@@ -12,7 +12,7 @@ public class PayOSService(IOptions<PayOSConfiguration> configuration, PayOS payO
     public async Task<(string? paymentUrl, string paymentReference)> GetPaymentUrlAsync(long amount, string description)
     {
         var paymentData = new PaymentData(
-            orderCode: 123,
+            orderCode: new Random().Next(100000000, 999999999),
             amount: (int)amount,
             description: description,
             items: [],
