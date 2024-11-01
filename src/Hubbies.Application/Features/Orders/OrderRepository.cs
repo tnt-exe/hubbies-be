@@ -79,7 +79,7 @@ public class OrderRepository(
 
         string? orderPaymentUrl;
         string? orderPaymentReference;
-        var orderDescription = $"Thanh toán đơn hàng {order.Id}";
+        var orderDescription = $"Thanh toán đơn hàng";
         if (request.PaymentType == PaymentType.ZaloPay)
         {
             (string? paymentUrl, string appTransId) = await zaloPayService.GetPaymentUrlAsync((long)order.TotalPrice, orderDescription);
@@ -183,52 +183,46 @@ public class OrderRepository(
 
         order.Status = orderStatus;
 
-        if (orderStatus != OrderStatus.Finished)
+        if (orderStatus == OrderStatus.Finished)
         {
-            return new OrderStatusDto()
+            static Notification CreateNotification(Guid userId, string orderId)
             {
-                OrderId = order.Id,
-                Status = order.Status
-            };
-        }
+                return new Notification()
+                {
+                    UserId = userId,
+                    Title = "Đơn hàng đã hoàn thành",
+                    Content = $"Đơn hàng với id {orderId} đã được thanh toán thành công",
+                    From = "System",
+                    SentAt = DateTimeOffset.Now.ToUniversalTime()
+                };
+            }
 
-        static Notification CreateNotification(Guid userId, string orderId)
-        {
-            return new Notification()
+            var adminId = Guid.Parse("c71da9be-4110-4452-89b8-2982c76efc1f");
+
+            var userNotification = CreateNotification(order.UserId, order.Id.ToString());
+            var adminNotification = CreateNotification(adminId, order.Id.ToString());
+            List<Notification> eventHostNotifications = [];
+
+            userNotification.UserId = order.UserId;
+            adminNotification.UserId = adminId;
+
+            foreach (var eventHost in order.OrderDetails.Select(x => x.TicketEvent!.EventHost))
             {
-                UserId = userId,
-                Title = "Đơn hàng đã hoàn thành",
-                Content = $"Đơn hàng với id {orderId} đã được thanh toán thành công",
-                From = "System",
-                SentAt = DateTimeOffset.Now.ToUniversalTime()
-            };
+                var eventHostNotification = CreateNotification(eventHost!.Id, order.Id.ToString());
+                eventHostNotification.UserId = eventHost!.Id;
+                eventHostNotifications.Add(eventHostNotification);
+            }
+
+            await Context.Notifications.AddRangeAsync([userNotification, adminNotification]);
+            await Context.Notifications.AddRangeAsync(eventHostNotifications);
         }
-
-        var adminId = Guid.Parse("c71da9be-4110-4452-89b8-2982c76efc1f");
-
-        var userNotification = CreateNotification(order.UserId, order.Id.ToString());
-        var adminNotification = CreateNotification(adminId, order.Id.ToString());
-        List<Notification> eventHostNotifications = [];
-
-        userNotification.UserId = order.UserId;
-        adminNotification.UserId = adminId;
-
-        foreach (var eventHost in order.OrderDetails.Select(x => x.TicketEvent!.EventHost))
-        {
-            var eventHostNotification = CreateNotification(eventHost!.Id, order.Id.ToString());
-            eventHostNotification.UserId = eventHost!.Id;
-            eventHostNotifications.Add(eventHostNotification);
-        }
-
-        await Context.Notifications.AddRangeAsync([userNotification, adminNotification]);
-        await Context.Notifications.AddRangeAsync(eventHostNotifications);
 
         await Context.SaveChangesAsync();
 
         return new OrderStatusDto()
         {
             OrderId = order.Id,
-            Status = order.Status
+            Status = orderStatus
         };
     }
 }
