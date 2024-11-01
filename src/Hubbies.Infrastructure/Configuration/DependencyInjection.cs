@@ -1,10 +1,13 @@
-﻿using Hubbies.Application.Payments.ZaloPay;
+﻿using Hubbies.Application.Payments.PayOS;
+using Hubbies.Application.Payments.ZaloPay;
 using Hubbies.Infrastructure.Auth;
 using Hubbies.Infrastructure.Identity;
+using Hubbies.Infrastructure.PaymentService.PaymentOS;
 using Hubbies.Infrastructure.PaymentService.ZaloPay;
 using Hubbies.Infrastructure.Persistence;
 using Hubbies.Infrastructure.Persistence.Interceptors;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Net.payOS;
 
 namespace Hubbies.Infrastructure.Configuration;
 
@@ -60,6 +63,14 @@ public static class DependencyInjection
 
         services.Configure<ZaloPayConfiguration>(configuration.GetSection("ZaloPay"));
         services.AddScoped<IZaloPayService, ZaloPayService>();
+
+        services.Configure<PayOSConfiguration>(configuration.GetSection("PayOS"));
+        services.AddSingleton(sp =>
+        {
+            var config = sp.GetRequiredService<IOptions<PayOSConfiguration>>().Value;
+            return new PayOS(config.ClientId!, config.ApiKey!, config.ChecksumKey!);
+        });
+        services.AddScoped<IPayOSService, PayOSService>();
 
         return services;
     }

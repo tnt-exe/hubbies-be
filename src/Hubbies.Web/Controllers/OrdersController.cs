@@ -61,7 +61,7 @@ public class OrdersController(IOrderService orderService)
     ///                 "quantity": 1
     ///             }
     ///         ],
-    ///         "paymentType": "ZaloPay"
+    ///         "paymentType": "ZaloPay" // ZaloPay, PayOS
     ///      }
     ///     
     /// </remarks>
@@ -93,7 +93,7 @@ public class OrdersController(IOrderService orderService)
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> CheckOrderStatusAsync([FromQuery] string paymentReference)
     {
-        var result = await orderService.CheckOrderStatusAsync(paymentReference, "ZaloPay");
+        var result = await orderService.CheckOrderStatusAsync(paymentReference, "PayOS");
 
         return Ok(result);
     }

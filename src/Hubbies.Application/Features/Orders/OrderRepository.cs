@@ -1,4 +1,5 @@
 using Hubbies.Application.Payments;
+using Hubbies.Application.Payments.PayOS;
 using Hubbies.Application.Payments.ZaloPay;
 
 namespace Hubbies.Application.Features.Orders;
@@ -8,7 +9,8 @@ public class OrderRepository(
     IMapper mapper,
     IServiceProvider serviceProvider,
     IUser user,
-    IZaloPayService zaloPayService)
+    IZaloPayService zaloPayService,
+    IPayOSService payOSService)
     : BaseRepository(context, mapper, serviceProvider), IOrderService
 {
     public async Task<OrderPaymentResponse> CreateOrderAsync(CreateOrderRequest request)
@@ -93,6 +95,21 @@ public class OrderRepository(
             orderPaymentUrl = paymentUrl;
             orderPaymentReference = appTransId;
         }
+        else if (request.PaymentType == PaymentType.PayOS)
+        {
+            (string? paymentUrl, string paymentRef) = await payOSService.GetPaymentUrlAsync((long)order.TotalPrice, orderDescription);
+
+            if (paymentUrl is null)
+            {
+                throw new BadRequestException("Failed to create payment url");
+            }
+
+            paymentReference.PaymentReference = paymentRef;
+            paymentReference.PaymentType = PaymentType.PayOS.ToString();
+
+            orderPaymentUrl = paymentUrl;
+            orderPaymentReference = paymentRef;
+        }
         else
         {
             //todo: add other payments, or forget about it
@@ -154,6 +171,10 @@ public class OrderRepository(
         if (paymentType == PaymentType.ZaloPay.ToString())
         {
             orderStatus = await zaloPayService.VerifyPaymentAsync(paymentReference);
+        }
+        else if (paymentType == PaymentType.PayOS.ToString())
+        {
+            orderStatus = await payOSService.VerifyPaymentAsync(paymentReference);
         }
         else
         {
