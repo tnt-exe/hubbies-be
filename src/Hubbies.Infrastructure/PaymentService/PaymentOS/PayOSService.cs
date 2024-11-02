@@ -30,7 +30,7 @@ public class PayOSService(IOptions<PayOSConfiguration> configuration, PayOS payO
         return (createPaymentResult.checkoutUrl, createPaymentResult.orderCode.ToString());
     }
 
-    public async Task<OrderStatus> VerifyPaymentAsync(string paymentRef)
+    public async Task<(OrderStatus, string data, string dataTs, string sig, string testSig)> VerifyPaymentAsync(string paymentRef)
     {
         // var paymentLinkInformation = await payOS.getPaymentLinkInformation(long.Parse(paymentRef));
 
@@ -56,14 +56,8 @@ public class PayOSService(IOptions<PayOSConfiguration> configuration, PayOS payO
         var testSignature = SignatureControlTest.CreateSignatureFromObj(jObject, _configuration.ChecksumKey!);
         logger.LogInformation("Test Signature: " + testSignature);
 
-        var orderResult = "CANCELLED"; //default value to test
+        var orderResult = OrderStatus.Canceled; //default value to test
 
-        return orderResult switch
-        {
-            "PAID" => OrderStatus.Finished,
-            "PENDING" => OrderStatus.Pending,
-            "CANCELLED" => OrderStatus.Canceled,
-            _ => OrderStatus.Canceled
-        };
+        return (orderResult, data, data.ToString(), signature, testSignature);
     }
 }
