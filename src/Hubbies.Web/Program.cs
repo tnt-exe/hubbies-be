@@ -23,15 +23,6 @@ public class Program
         builder.Services.AddApplicationServices();
         builder.Services.AddWebServices(builder.Configuration);
 
-        builder.Services.AddApplicationInsightsTelemetry();
-
-        builder.Services.AddLogging(builder =>
-        {
-            builder.AddConsole();
-            builder.AddApplicationInsights();
-            builder.AddDebug();
-        });
-
         var app = builder.Build();
 
         app.UseExceptionHandler();
