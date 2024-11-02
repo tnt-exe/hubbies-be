@@ -2,7 +2,6 @@ using Hubbies.Application.Payments;
 using Hubbies.Application.Payments.PayOS;
 using Net.payOS;
 using Net.payOS.Types;
-using Newtonsoft.Json.Linq;
 
 namespace Hubbies.Infrastructure.PaymentService.PaymentOS;
 
@@ -29,27 +28,16 @@ public class PayOSService(IOptions<PayOSConfiguration> configuration, PayOS payO
         return (createPaymentResult.checkoutUrl, createPaymentResult.orderCode.ToString());
     }
 
-    public async Task<(OrderStatus, string data, string dataTs, string sig, string testSig)> VerifyPaymentAsync(string paymentRef)
+    public async Task<OrderStatus> VerifyPaymentAsync(string paymentRef)
     {
         var paymentLinkInformation = await payOS.getPaymentLinkInformation(long.Parse(paymentRef));
 
-        string requestUri = "https://api-merchant.payos.vn/v2/payment-requests/" + paymentRef;
-        JObject jObject = JObject.Parse(await (await new HttpClient().SendAsync(new HttpRequestMessage(HttpMethod.Get, requestUri)
+        return paymentLinkInformation.status switch
         {
-            Headers =
-            {
-                { "x-client-id", _configuration.ClientId },
-                { "x-api-key", _configuration.ApiKey }
-            }
-        })).Content.ReadAsStringAsync());
-
-        string data = jObject["data"]!.ToString();
-        string signature = jObject["signature"]!.ToString();
-
-        var testSignature = SignatureControlTest.CreateSignatureFromObj(jObject, _configuration.ChecksumKey!);
-
-        var orderResult = OrderStatus.Canceled; //default value to test
-
-        return (orderResult, data, data.ToString(), signature, testSignature);
+            "PAID" => OrderStatus.Finished,
+            "PENDING" => OrderStatus.Pending,
+            "CANCELLED" => OrderStatus.Canceled,
+            _ => OrderStatus.Canceled
+        };
     }
 }
