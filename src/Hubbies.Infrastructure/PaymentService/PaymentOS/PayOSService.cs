@@ -1,12 +1,13 @@
 using Hubbies.Application.Payments;
 using Hubbies.Application.Payments.PayOS;
+using Microsoft.Extensions.Logging;
 using Net.payOS;
 using Net.payOS.Types;
 using Newtonsoft.Json.Linq;
 
 namespace Hubbies.Infrastructure.PaymentService.PaymentOS;
 
-public class PayOSService(IOptions<PayOSConfiguration> configuration, PayOS payOS)
+public class PayOSService(IOptions<PayOSConfiguration> configuration, PayOS payOS, ILogger<PayOSService> logger)
     : IPayOSService
 {
     private readonly PayOSConfiguration _configuration = configuration.Value;
@@ -46,13 +47,14 @@ public class PayOSService(IOptions<PayOSConfiguration> configuration, PayOS payO
         string data = jObject["data"]!.ToString();
         string signature = jObject["signature"]!.ToString();
 
-        Console.WriteLine("Data: " + data);
-        Console.WriteLine("Dat ts: " + data.ToString());
+        logger.LogInformation("Data: " + data);
+        logger.LogInformation("Data ts: " + data.ToString());
 
+        logger.LogInformation("Signature: " + signature);
         Console.WriteLine("Signature: " + signature);
 
         var testSignature = SignatureControlTest.CreateSignatureFromObj(jObject, _configuration.ChecksumKey!);
-        Console.WriteLine("Test Signature: " + testSignature);
+        logger.LogInformation("Test Signature: " + testSignature);
 
         var orderResult = "CANCELLED"; //default value to test
 
