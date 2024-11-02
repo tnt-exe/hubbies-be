@@ -176,17 +176,7 @@ public class OrderRepository(
         }
         else if (paymentType == PaymentType.PayOS.ToString())
         {
-            var result = await payOSService.VerifyPaymentAsync(paymentReference);
-
-            return new OrderStatusDto()
-            {
-                OrderId = order.Id,
-                Status = result.Item1,
-                Data = result.data,
-                DataTs = result.dataTs,
-                Signature = result.sig,
-                TestSignature = result.testSig
-            };
+            orderStatus = await payOSService.VerifyPaymentAsync(paymentReference);
         }
         else
         {
