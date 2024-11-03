@@ -1,4 +1,4 @@
-using Hubbies.Application.Payments;
+using Hubbies.Application.Features.Payments;
 using Hubbies.Infrastructure.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

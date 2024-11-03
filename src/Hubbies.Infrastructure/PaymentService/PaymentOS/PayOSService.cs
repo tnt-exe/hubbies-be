@@ -1,4 +1,4 @@
-using Hubbies.Application.Payments;
+using Hubbies.Application.Features.Payments;
 using Net.payOS;
 using Net.payOS.Types;
 

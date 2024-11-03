@@ -1,5 +1,5 @@
 using Hubbies.Application.Features.Orders;
-using Hubbies.Application.Payments;
+using Hubbies.Application.Features.Payments;
 
 namespace Hubbies.Web.Controllers;
 

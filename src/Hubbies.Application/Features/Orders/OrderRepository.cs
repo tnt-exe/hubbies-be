@@ -1,4 +1,4 @@
-using Hubbies.Application.Payments;
+using Hubbies.Application.Features.Payments;
 using Microsoft.Extensions.Configuration;
 
 namespace Hubbies.Application.Features.Orders;

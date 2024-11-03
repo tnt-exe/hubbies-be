@@ -1,4 +1,4 @@
-﻿using Hubbies.Application.Payments;
+﻿using Hubbies.Application.Features.Payments;
 using Hubbies.Infrastructure.Auth;
 using Hubbies.Infrastructure.Identity;
 using Hubbies.Infrastructure.PaymentService.PaymentOS;

@@ -1,4 +1,4 @@
-namespace Hubbies.Application.Payments;
+namespace Hubbies.Application.Features.Payments;
 
 public interface IPaymentService
 {
