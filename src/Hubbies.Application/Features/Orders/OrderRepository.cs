@@ -90,7 +90,7 @@ public class OrderRepository(
             }
 
             paymentReference.PaymentReference = appTransId;
-            paymentReference.PaymentType = PaymentProvider.ZaloPay.ToString();
+            paymentReference.PaymentType = nameof(PaymentProvider.ZaloPay);
 
             orderPaymentUrl = paymentUrl;
             orderPaymentReference = appTransId;
@@ -105,7 +105,7 @@ public class OrderRepository(
             }
 
             paymentReference.PaymentReference = paymentRef;
-            paymentReference.PaymentType = PaymentProvider.PayOS.ToString();
+            paymentReference.PaymentType = nameof(PaymentProvider.PayOS);
 
             orderPaymentUrl = paymentUrl;
             orderPaymentReference = paymentRef;
