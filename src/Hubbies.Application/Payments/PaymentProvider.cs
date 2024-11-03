@@ -1,6 +1,6 @@
 namespace Hubbies.Application.Payments;
 
-public enum PaymentType
+public enum PaymentProvider
 {
     PayOS,
     ZaloPay

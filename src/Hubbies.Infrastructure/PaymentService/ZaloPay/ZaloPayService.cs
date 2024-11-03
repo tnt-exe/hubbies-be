@@ -1,5 +1,4 @@
 using Hubbies.Application.Payments;
-using Hubbies.Application.Payments.ZaloPay;
 using Hubbies.Infrastructure.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -7,15 +6,15 @@ using Newtonsoft.Json.Linq;
 namespace Hubbies.Infrastructure.PaymentService.ZaloPay;
 
 public class ZaloPayService(IOptions<ZaloPayConfiguration> configuration)
-    : IZaloPayService
+    : IPaymentService
 {
     private readonly ZaloPayConfiguration _configuration = configuration.Value;
 
-    public async Task<(string? paymentUrl, string appTransId)> GetPaymentUrlAsync(
+    public async Task<(string? paymentUrl, string paymentId)> GetPaymentUrlAsync(
         long amount,
         string description)
     {
-        var provider = "?provider=" + PaymentType.ZaloPay;
+        var provider = "?provider=" + PaymentProvider.ZaloPay;
 
         var appId = _configuration.AppId!;
         var appUser = _configuration.AppUser!;
@@ -63,7 +62,7 @@ public class ZaloPayService(IOptions<ZaloPayConfiguration> configuration)
         return (null, appTransId);
     }
 
-    public async Task<OrderStatus> VerifyPaymentAsync(string appTransId)
+    public async Task<OrderStatus> VerifyPaymentAsync(string paymentId)
     {
         var appId = _configuration.AppId!;
         var key1 = _configuration.Key1!;
@@ -72,11 +71,11 @@ public class ZaloPayService(IOptions<ZaloPayConfiguration> configuration)
         var queryParams = new Dictionary<string, string>
         {
             { "app_id", appId },
-            { "app_trans_id", appTransId }
+            { "app_trans_id", paymentId }
         };
 
         var macData = appId +
-                "|" + appTransId +
+                "|" + paymentId +
                 "|" + key1;
 
         queryParams.Add("mac", HashHelper.HmacSHA256(macData, _configuration.Key1!));
@@ -99,7 +98,7 @@ public class ZaloPayService(IOptions<ZaloPayConfiguration> configuration)
         return OrderStatus.Pending;
     }
 
-    public Dictionary<string, object> CallbackPayment(dynamic callbackData)
+    public dynamic CallbackPayment(dynamic callbackData)
     {
         var result = new Dictionary<string, object>();
 

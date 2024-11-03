@@ -41,11 +41,11 @@ public interface IOrderService
     /// <summary>
     /// Check order status
     /// </summary>
-    /// <param name="paymentReference"></param>
+    /// <param name="paymentId"></param>
     /// <param name="paymentType"></param>
     /// <returns>
     /// The task result contains an <see cref="OrderStatusDto"/> object.
     /// </returns>
     /// <exception cref="NotFoundException">Payment or order not found</exception>
-    Task<OrderStatusDto> CheckOrderStatusAsync(string paymentReference, string paymentType);
+    Task<OrderStatusDto> CheckOrderStatusAsync(string paymentId, string paymentType);
 }

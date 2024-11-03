@@ -10,7 +10,7 @@ public record CreateOrderRequest
 
     public IEnumerable<CreateOrderDetailsRequest> OrderDetails { get; init; } = default!;
 
-    public PaymentType PaymentType { get; init; }
+    public PaymentProvider PaymentType { get; init; }
 }
 
 public class CreateOrderRequestValidator : AbstractValidator<CreateOrderRequest>

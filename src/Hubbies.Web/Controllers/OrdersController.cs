@@ -95,7 +95,7 @@ public class OrdersController(IOrderService orderService)
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> CheckOrderStatusAsync(
         [FromQuery] string paymentReference,
-        [FromQuery] PaymentType paymentType)
+        [FromQuery] PaymentProvider paymentType)
     {
         var result = await orderService.CheckOrderStatusAsync(paymentReference, paymentType.ToString());
 

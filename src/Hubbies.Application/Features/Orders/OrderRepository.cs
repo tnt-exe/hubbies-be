@@ -1,6 +1,4 @@
 using Hubbies.Application.Payments;
-using Hubbies.Application.Payments.PayOS;
-using Hubbies.Application.Payments.ZaloPay;
 using Microsoft.Extensions.Configuration;
 
 namespace Hubbies.Application.Features.Orders;
@@ -11,8 +9,8 @@ public class OrderRepository(
     IServiceProvider serviceProvider,
     IUser user,
     IConfiguration configuration,
-    IZaloPayService zaloPayService,
-    IPayOSService payOSService)
+    [FromKeyedServices(nameof(PaymentProvider.PayOS))] IPaymentService payOSService,
+    [FromKeyedServices(nameof(PaymentProvider.ZaloPay))] IPaymentService zaloPayService)
     : BaseRepository(context, mapper, serviceProvider), IOrderService
 {
     public async Task<OrderPaymentResponse> CreateOrderAsync(CreateOrderRequest request)
@@ -82,7 +80,7 @@ public class OrderRepository(
         string? orderPaymentUrl;
         string? orderPaymentReference;
         var orderDescription = $"Thanh toán đơn hàng";
-        if (request.PaymentType == PaymentType.ZaloPay)
+        if (request.PaymentType == PaymentProvider.ZaloPay)
         {
             (string? paymentUrl, string appTransId) = await zaloPayService.GetPaymentUrlAsync((long)order.TotalPrice, orderDescription);
 
@@ -92,12 +90,12 @@ public class OrderRepository(
             }
 
             paymentReference.PaymentReference = appTransId;
-            paymentReference.PaymentType = PaymentType.ZaloPay.ToString();
+            paymentReference.PaymentType = PaymentProvider.ZaloPay.ToString();
 
             orderPaymentUrl = paymentUrl;
             orderPaymentReference = appTransId;
         }
-        else if (request.PaymentType == PaymentType.PayOS)
+        else if (request.PaymentType == PaymentProvider.PayOS)
         {
             (string? paymentUrl, string paymentRef) = await payOSService.GetPaymentUrlAsync((long)order.TotalPrice, orderDescription);
 
@@ -107,7 +105,7 @@ public class OrderRepository(
             }
 
             paymentReference.PaymentReference = paymentRef;
-            paymentReference.PaymentType = PaymentType.PayOS.ToString();
+            paymentReference.PaymentType = PaymentProvider.PayOS.ToString();
 
             orderPaymentUrl = paymentUrl;
             orderPaymentReference = paymentRef;
@@ -155,11 +153,11 @@ public class OrderRepository(
         return orders;
     }
 
-    public async Task<OrderStatusDto> CheckOrderStatusAsync(string paymentReference, string paymentType)
+    public async Task<OrderStatusDto> CheckOrderStatusAsync(string paymentId, string paymentType)
     {
         var payment = await Context.Payments
-            .FirstOrDefaultAsync(x => x.PaymentReference == paymentReference)
-            ?? throw new NotFoundException(nameof(Payment), paymentReference);
+            .FirstOrDefaultAsync(x => x.PaymentReference == paymentId)
+            ?? throw new NotFoundException(nameof(Payment), paymentId);
 
         var order = await Context.Orders
             .Include(x => x.OrderDetails)
@@ -169,19 +167,12 @@ public class OrderRepository(
             .FirstOrDefaultAsync(x => x.Id == payment.OrderId)
             ?? throw new NotFoundException(nameof(Order), payment.OrderId);
 
-        OrderStatus orderStatus;
-        if (paymentType == PaymentType.ZaloPay.ToString())
+        var orderStatus = paymentType switch
         {
-            orderStatus = await zaloPayService.VerifyPaymentAsync(paymentReference);
-        }
-        else if (paymentType == PaymentType.PayOS.ToString())
-        {
-            orderStatus = await payOSService.VerifyPaymentAsync(paymentReference);
-        }
-        else
-        {
-            orderStatus = OrderStatus.Canceled;
-        }
+            nameof(PaymentProvider.PayOS) => await payOSService.VerifyPaymentAsync(paymentId),
+            nameof(PaymentProvider.ZaloPay) => await zaloPayService.VerifyPaymentAsync(paymentId),
+            _ => OrderStatus.Canceled
+        };
 
         order.Status = orderStatus;
 

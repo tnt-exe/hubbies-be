@@ -1,4 +1,4 @@
-using Hubbies.Application.Payments.ZaloPay;
+using Hubbies.Application.Payments;
 
 namespace Hubbies.Web.Controllers;
 
@@ -7,7 +7,7 @@ namespace Hubbies.Web.Controllers;
 [Consumes("application/json")]
 [Produces("application/json")]
 public class PaymentsController(
-    IZaloPayService zaloPayService)
+    [FromKeyedServices(nameof(PaymentProvider.ZaloPay))] IPaymentService zaloPayService)
     : ControllerBase
 {
     /// <summary>

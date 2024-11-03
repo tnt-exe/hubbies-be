@@ -1,5 +1,4 @@
-﻿using Hubbies.Application.Payments.PayOS;
-using Hubbies.Application.Payments.ZaloPay;
+﻿using Hubbies.Application.Payments;
 using Hubbies.Infrastructure.Auth;
 using Hubbies.Infrastructure.Identity;
 using Hubbies.Infrastructure.PaymentService.PaymentOS;
@@ -62,7 +61,7 @@ public static class DependencyInjection
                 tags: ["db", "sql", "postgre"]);
 
         services.Configure<ZaloPayConfiguration>(configuration.GetSection("ZaloPay"));
-        services.AddScoped<IZaloPayService, ZaloPayService>();
+        services.AddKeyedScoped<IPaymentService, ZaloPayService>(nameof(PaymentProvider.ZaloPay));
 
         services.Configure<PayOSConfiguration>(configuration.GetSection("PayOS"));
         services.AddSingleton(sp =>
@@ -70,7 +69,7 @@ public static class DependencyInjection
             var config = sp.GetRequiredService<IOptions<PayOSConfiguration>>().Value;
             return new PayOS(config.ClientId!, config.ApiKey!, config.ChecksumKey!);
         });
-        services.AddScoped<IPayOSService, PayOSService>();
+        services.AddKeyedScoped<IPaymentService, PayOSService>(nameof(PaymentProvider.PayOS));
 
         return services;
     }
